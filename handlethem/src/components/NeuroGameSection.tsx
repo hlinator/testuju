@@ -51,7 +51,7 @@ const DIRECTION_ROUNDS: () => Round[] = () => {
 }
 
 const NUMBER_ROUNDS: () => Round[] = () =>
-  Array.from({ length: 6 }, (_, i) => {
+  Array.from({ length: 6 }, () => {
     const n = Math.floor(Math.random() * 9) + 1
     const opts = new Set<number>([n])
     while (opts.size < 4) opts.add(Math.floor(Math.random() * 9) + 1)
@@ -83,7 +83,7 @@ const STROOP_ROUNDS: () => Round[] = () => {
 }
 
 function buildRounds(): Round[] {
-  const r = [...COLOR_ROUNDS(), ...DIRECTION_ROUNDS().slice(0,2), ...NUMBER_ROUNDS().slice(0,3)]
+  const r = [...COLOR_ROUNDS(), ...DIRECTION_ROUNDS().slice(0,2), ...NUMBER_ROUNDS().slice(0,2), ...STROOP_ROUNDS()]
   return r.sort(() => Math.random() - .5).slice(0, 8)
 }
 
@@ -95,7 +95,6 @@ export default function NeuroGameSection() {
   const [combo, setCombo] = useState(1)
   const [countdown, setCountdown] = useState(3)
   const [lastCorrect, setLastCorrect] = useState<boolean | null>(null)
-  const [listening, setListening] = useState(false)
   const [reactionMs, setReactionMs] = useState<number | null>(null)
   const [avgReaction, setAvgReaction] = useState<number[]>([])
   const [hasVoice, setHasVoice] = useState(false)
@@ -115,20 +114,18 @@ export default function NeuroGameSection() {
   ]
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-      setHasVoice(!!SR)
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHasVoice(!!SR)
   }, [])
 
   const stopRecognition = useCallback(() => {
     recognitionRef.current?.stop()
     recognitionRef.current = null
-    setListening(false)
   }, [])
 
-  const goToNext = useCallback((correct: boolean) => {
+  const goToNext = useCallback(() => {
     const nextIdx = roundIdx + 1
     if (nextIdx >= rounds.length) {
       setGameState('gameover')
@@ -141,7 +138,6 @@ export default function NeuroGameSection() {
       const showDur = isNumber ? 650 : 1100
       timerRef.current = setTimeout(() => {
         setGameState('listening')
-        setListening(true)
       }, showDur)
     }
   }, [roundIdx, rounds])
@@ -164,7 +160,7 @@ export default function NeuroGameSection() {
       setCombo(1)
     }
     setGameState('result')
-    timerRef.current = setTimeout(() => goToNext(correct), 1100)
+    timerRef.current = setTimeout(() => goToNext(), 1100)
   }, [rounds, roundIdx, combo, stopRecognition, goToNext])
 
   const startListeningVoice = useCallback(() => {
@@ -193,7 +189,7 @@ export default function NeuroGameSection() {
         setLastCorrect(false)
         setCombo(1)
         setGameState('result')
-        timerRef.current = setTimeout(() => goToNext(false), 1000)
+        timerRef.current = setTimeout(() => goToNext(), 1000)
       }, 3000)
     }
   }, [gameState, hasVoice, startListeningVoice, stopRecognition, goToNext])
@@ -219,7 +215,6 @@ export default function NeuroGameSection() {
         showStartRef.current = performance.now()
         timerRef.current = setTimeout(() => {
           setGameState('listening')
-          setListening(true)
         }, newRounds[0].mode === 'number' ? 650 : 1100)
       }
     }, 1000)

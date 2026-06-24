@@ -70,13 +70,13 @@ export default function ChallengeSection() {
             className="flex flex-col items-center gap-4"
           >
             <div className="font-display font-black text-4xl fire-text text-glow">VS</div>
-            <div className="w-px h-12 forge-line-v" />
+            <div className="w-px h-12 ht-line-v" />
             {/* Wager */}
             <div className="bg-card border border-fire/30 rounded-xl px-4 py-2 text-center shadow-lg shadow-fire/10">
               <div className="text-xs text-text3 uppercase tracking-wider">Sázka</div>
               <div className="font-display font-bold text-orange text-lg">50 ELO</div>
             </div>
-            <div className="w-px h-12 forge-line-v" />
+            <div className="w-px h-12 ht-line-v" />
           </motion.div>
 
           {/* Player 2 */}

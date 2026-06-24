@@ -6,7 +6,7 @@ const POINTS = [
   {
     num: '01',
     title: 'Deliberate Practice',
-    desc: 'K. A. Ericsson prokázal, že expertní výkon vzniká záměrným opakovaným tréninkem konkrétních dovedností s okamžitou zpětnou vazbou — přesně tak funguje FORGE.',
+    desc: 'K. A. Ericsson prokázal, že expertní výkon vzniká záměrným opakovaným tréninkem konkrétních dovedností s okamžitou zpětnou vazbou — přesně tak funguje HandleThem.',
   },
   {
     num: '02',

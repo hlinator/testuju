@@ -104,7 +104,7 @@ export default function HeroSection() {
                   <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
                   <div className="w-3 h-3 rounded-full bg-[#28C840]" />
                 </div>
-                <span className="text-xs text-text3 mx-auto font-medium">FORGE Dashboard</span>
+                <span className="text-xs text-text3 mx-auto font-medium">HandleThem Dashboard</span>
               </div>
 
               {/* Dashboard body */}

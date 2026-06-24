@@ -99,12 +99,12 @@ body {
 .glow-ice   { box-shadow: 0 0 40px rgba(0,207,255,.22), 0 0 80px rgba(0,207,255,.08); }
 .text-glow  { text-shadow: 0 0 32px rgba(255,69,0,.55); }
 
-/* ── FORGE LINE ────────────────────────────────── */
-.forge-line-h {
+/* ── HT LINE ────────────────────────────────────── */
+.ht-line-h {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--color-fire) 50%, transparent);
 }
-.forge-line-v {
+.ht-line-v {
   width: 1px;
   background: linear-gradient(180deg, transparent, var(--color-fire) 50%, transparent);
 }

@@ -59,7 +59,7 @@ export default function CtaSection() {
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </a>
-            <a href="mailto:info@forge.gg"
+            <a href="mailto:info@handlethem.cz"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-text1 text-base border border-border hover:border-orange/40 transition-all duration-200">
               Kontaktovat nás
             </a>

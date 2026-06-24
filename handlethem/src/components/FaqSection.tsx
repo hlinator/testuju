@@ -10,7 +10,7 @@ const FAQS = [
   },
   {
     q: 'Kolik času denně potřebuji?',
-    a: 'FORGE je navržen pro krátké 10minutové bloky. Věda dokazuje, že pravidelné krátké tréninky jsou efektivnější než nepravidelné dlouhé sezení. Samozřejmě trénovat déle je vždy možné.',
+    a: 'HandleThem je navržen pro krátké 10minutové bloky. Věda dokazuje, že pravidelné krátké tréninky jsou efektivnější než nepravidelné dlouhé sezení. Samozřejmě trénovat déle je vždy možné.',
   },
   {
     q: 'Jak funguje hlasové ovládání neurovizuálních her?',
@@ -18,7 +18,7 @@ const FAQS = [
   },
   {
     q: 'Je platforma vhodná pro děti?',
-    a: 'Ano! FORGE je navržen pro hráče všech věkových kategorií. Pro mladší hráče jsou videa a hry přizpůsobeny věku a úrovni. Rodiče mohou vytvořit rodinný účet a sledovat pokrok dítěte.',
+    a: 'Ano! HandleThem je navržen pro hráče všech věkových kategorií. Pro mladší hráče jsou videa a hry přizpůsobeny věku a úrovni. Rodiče mohou vytvořit rodinný účet a sledovat pokrok dítěte.',
   },
   {
     q: 'Jaký sport platforma podporuje?',

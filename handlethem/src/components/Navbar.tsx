@@ -55,7 +55,7 @@ export default function Navbar() {
             <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-fire to-orange flex items-center justify-center text-sm animate-glow-pulse shadow-lg">
               🔥
             </span>
-            <span className="tracking-tight">FORGE</span>
+            <span className="tracking-tight">HandleThem</span>
           </button>
 
           {/* Desktop Nav */}

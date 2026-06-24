@@ -26,7 +26,7 @@ export default function Footer() {
         { label: 'O nás', href: '#' },
         { label: 'Blog', href: '#' },
         { label: 'Kariéra', href: '#' },
-        { label: 'Kontakt', href: 'mailto:info@forge.gg' },
+        { label: 'Kontakt', href: 'mailto:info@handlethem.cz' },
         { label: 'Press kit', href: '#' },
       ],
     },
@@ -40,7 +40,7 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2.5 font-display font-bold text-xl">
               <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-fire to-orange flex items-center justify-center text-sm animate-glow-pulse">🔥</span>
-              <span>FORGE</span>
+              <span>HandleThem</span>
             </div>
             <p className="text-sm text-text3 max-w-[240px] leading-relaxed">
               Platforma nové generace pro rozvoj hokejových a florbalistických dovedností.
@@ -78,7 +78,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-border pt-7 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-text3">© 2025 FORGE Sports Intelligence s.r.o. Všechna práva vyhrazena.</p>
+          <p className="text-xs text-text3">© 2025 HandleThem Sports Intelligence s.r.o. Všechna práva vyhrazena.</p>
           <div className="flex gap-5">
             {['Podmínky použití', 'Ochrana soukromí', 'Cookies'].map(l => (
               <a key={l} href="#" className="text-xs text-text3 hover:text-text1 transition-colors">{l}</a>

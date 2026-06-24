@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 const TESTIMONIALS = [
   {
     stars: 5,
-    text: '„Za 6 týdnů jsem zlepšil reakční čas o 28 ms. Trenér na mě řekl, že se viditelně zlepšil přehled na hřišti. FORGE funguje."',
+    text: '„Za 6 týdnů jsem zlepšil reakční čas o 28 ms. Trenér na mě řekl, že se viditelně zlepšil přehled na hřišti. HandleThem funguje."',
     name: 'Marek K., 17 let',
     role: '🏒 HC Sparta Praha, mládež',
     initials: 'MK',
@@ -13,7 +13,7 @@ const TESTIMONIALS = [
   },
   {
     stars: 5,
-    text: '„Jako trenér jsem zavedl FORGE na skills trénincích. Hráči reagují na vizuální signály z laptopu před střelou — úroveň rozhodování viditelně vzrostla."',
+    text: '„Jako trenér jsem zavedl HandleThem na skills trénincích. Hráči reagují na vizuální signály z laptopu před střelou — úroveň rozhodování viditelně vzrostla."',
     name: 'Pavel V., trenér',
     role: '🏒 HC Kometa Brno B-tým',
     initials: 'PV',
