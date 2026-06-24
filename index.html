@@ -1,0 +1,1924 @@
+<!DOCTYPE html>
+<html lang="cs" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORGE — Trénuj jako profesionál</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ─────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+img,video,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+ul{list-style:none}
+
+/* ── CSS VARIABLES ────────────────────────────────── */
+:root{
+  --f1:#FF2200;--f2:#FF4500;--f3:#FF6B35;--f4:#FFA040;--f5:#FFD700;
+  --bg0:#06060E;--bg1:#0C0C1A;--bg2:#111126;--bg3:#1A1A32;--surface:#20203A;
+  --card:#1C1C30;--border:rgba(255,255,255,.07);--border-fire:rgba(255,69,0,.3);
+  --txt1:#F0F0FF;--txt2:#A0A0C0;--txt3:#606080;
+  --radius:14px;--radius-lg:22px;
+  --shadow:0 4px 32px rgba(0,0,0,.5);
+  --glow:0 0 40px rgba(255,69,0,.25);
+  --trans:.25s cubic-bezier(.4,0,.2,1);
+}
+[data-theme="light"]{
+  --bg0:#F5F5FF;--bg1:#FFFFFF;--bg2:#EEEEFF;--bg3:#E4E4F8;--surface:#FFFFFF;
+  --card:#FFFFFF;--border:rgba(0,0,0,.09);--border-fire:rgba(255,69,0,.25);
+  --txt1:#0A0A1E;--txt2:#444466;--txt3:#8888AA;
+  --shadow:0 4px 32px rgba(0,0,0,.12);
+  --glow:0 0 40px rgba(255,69,0,.15);
+}
+
+/* ── TYPOGRAPHY ───────────────────────────────────── */
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg0);color:var(--txt1);
+  overflow-x:hidden;line-height:1.6;
+}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;line-height:1.15;font-weight:700}
+h1{font-size:clamp(2.4rem,5.5vw,4.2rem);letter-spacing:-.03em}
+h2{font-size:clamp(1.8rem,3.5vw,2.8rem);letter-spacing:-.02em}
+h3{font-size:clamp(1.2rem,2vw,1.5rem)}
+p{color:var(--txt2);line-height:1.75}
+
+/* ── UTILS ────────────────────────────────────────── */
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
+.section{padding:100px 0}
+.section-sm{padding:60px 0}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px;border-radius:999px;font-size:.8rem;font-weight:600;
+  border:1px solid var(--border-fire);background:rgba(255,69,0,.1);color:var(--f3);
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--f2);
+  box-shadow:0 0 8px var(--f2);animation:pulse 2s infinite}
+.fire-text{background:linear-gradient(135deg,var(--f2),var(--f4),var(--f5));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 28px;border-radius:var(--radius);font-size:.95rem;font-weight:600;
+  transition:var(--trans);white-space:nowrap;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--f2),var(--f1));color:#fff;
+  box-shadow:0 4px 24px rgba(255,69,0,.4);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,69,0,.5)}
+.btn-primary:active{transform:translateY(0)}
+.btn-secondary{
+  background:var(--surface);color:var(--txt1);
+  border:1px solid var(--border);
+}
+.btn-secondary:hover{border-color:var(--border-fire);background:var(--card)}
+.btn-outline{
+  background:transparent;color:var(--txt1);
+  border:1px solid var(--border);
+}
+.btn-outline:hover{border-color:var(--f3);color:var(--f3)}
+.tag{
+  padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:600;
+  background:rgba(255,69,0,.15);color:var(--f3);
+}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.flex{display:flex}
+.flex-center{display:flex;align-items:center;justify-content:center}
+.text-center{text-align:center}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-32px);transition:opacity .6s ease,transform .6s ease}
+.reveal-left.visible{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(32px);transition:opacity .6s ease,transform .6s ease}
+.reveal-right.visible{opacity:1;transform:none}
+
+/* ── ANIMATIONS ───────────────────────────────────── */
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes float2{0%,100%{transform:translateY(-6px)}50%{transform:translateY(6px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes glow-pulse{0%,100%{box-shadow:0 0 20px rgba(255,69,0,.3)}50%{box-shadow:0 0 50px rgba(255,69,0,.6)}}
+@keyframes fire-flicker{0%,100%{opacity:1}25%{opacity:.85}75%{opacity:.9}}
+@keyframes slide-in-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes counter-fill{from{width:0}to{width:var(--w)}}
+@keyframes orbit{to{transform:rotate(360deg) translateX(70px) rotate(-360deg)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ── SCROLLBAR ────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg0)}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--f2)}
+
+/* ── NAVIGATION ───────────────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:0 24px;
+  transition:var(--trans);
+}
+.nav-inner{
+  max-width:1180px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:68px;
+  border-bottom:1px solid transparent;
+  transition:var(--trans);
+}
+.nav.scrolled{
+  background:rgba(6,6,14,.85);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+[data-theme="light"] .nav.scrolled{background:rgba(245,245,255,.88)}
+.nav-logo{
+  font-family:'Space Grotesk',sans-serif;font-size:1.55rem;font-weight:700;
+  display:flex;align-items:center;gap:10px;
+}
+.nav-logo-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--f1),var(--f3));
+  display:flex;align-items:center;justify-content:center;
+  animation:glow-pulse 3s infinite;font-size:1.1rem;
+}
+.nav-links{display:flex;align-items:center;gap:8px}
+.nav-links a{
+  padding:7px 14px;border-radius:8px;font-size:.9rem;font-weight:500;
+  color:var(--txt2);transition:var(--trans);
+}
+.nav-links a:hover{color:var(--txt1);background:var(--surface)}
+.nav-actions{display:flex;align-items:center;gap:12px}
+.theme-toggle{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--txt2);font-size:1.1rem;transition:var(--trans);
+}
+.theme-toggle:hover{border-color:var(--f3);color:var(--f3)}
+.hamburger{
+  display:none;flex-direction:column;gap:5px;
+  width:40px;height:40px;align-items:center;justify-content:center;
+  border-radius:10px;background:var(--surface);border:1px solid var(--border);
+}
+.hamburger span{
+  display:block;width:20px;height:2px;border-radius:2px;
+  background:var(--txt1);transition:var(--trans);
+}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-menu{
+  display:none;position:fixed;top:68px;left:0;right:0;
+  background:var(--bg1);border-bottom:1px solid var(--border);
+  padding:20px 24px 28px;z-index:999;
+  flex-direction:column;gap:4px;
+}
+.mobile-menu.open{display:flex}
+.mobile-menu a{
+  padding:12px 16px;border-radius:10px;font-weight:500;
+  color:var(--txt2);transition:var(--trans);
+}
+.mobile-menu a:hover{background:var(--surface);color:var(--txt1)}
+.mobile-menu .btn{margin-top:12px;width:100%}
+
+/* ── HERO ─────────────────────────────────────────── */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:120px 0 80px;position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;pointer-events:none;z-index:0;
+}
+.hero-orb{
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:.35;
+}
+.hero-orb-1{
+  width:600px;height:600px;
+  background:radial-gradient(circle,var(--f2),transparent 70%);
+  top:-200px;right:-100px;animation:float 8s ease-in-out infinite;
+}
+.hero-orb-2{
+  width:400px;height:400px;
+  background:radial-gradient(circle,#5500FF,transparent 70%);
+  bottom:-100px;left:-100px;animation:float2 10s ease-in-out infinite;
+}
+.hero-grid-lines{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+[data-theme="light"] .hero-grid-lines{
+  background-image:
+    linear-gradient(rgba(0,0,0,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,0,0,.04) 1px,transparent 1px);
+}
+.hero-content{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center;
+}
+.hero-left{display:flex;flex-direction:column;gap:28px}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hero-sports{display:flex;gap:8px}
+.sport-pill{
+  padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:600;
+  background:var(--surface);border:1px solid var(--border);color:var(--txt2);
+}
+.hero-title{margin-bottom:4px}
+.hero-title em{font-style:normal}
+.hero-subtitle{font-size:1.1rem;max-width:520px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.hero-social-proof{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.avatars{display:flex}
+.avatar{
+  width:34px;height:34px;border-radius:50%;border:2px solid var(--bg0);
+  background:linear-gradient(135deg,var(--f2),var(--f5));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:700;color:#fff;margin-left:-10px;
+}
+.avatars .avatar:first-child{margin-left:0}
+.proof-text{font-size:.85rem;color:var(--txt2)}
+.proof-text strong{color:var(--txt1)}
+
+/* ── HERO VIDEO MOCKUP ────────────────────────────── */
+.hero-right{position:relative;display:flex;align-items:center;justify-content:center}
+.video-mockup{
+  position:relative;width:100%;max-width:520px;
+  border-radius:20px;overflow:hidden;
+  border:1px solid var(--border-fire);
+  box-shadow:0 0 0 1px var(--border),var(--glow),var(--shadow);
+  animation:float 7s ease-in-out infinite;
+}
+.video-screen{
+  aspect-ratio:16/10;
+  background:linear-gradient(135deg,#0A0A20,#1a0a2e,#0A1020);
+  position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;
+}
+.video-overlay-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,69,0,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,69,0,.08) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.video-content{
+  position:relative;z-index:1;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+}
+.play-btn{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,var(--f2),var(--f1));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;cursor:pointer;
+  box-shadow:0 0 0 0 rgba(255,69,0,.5);
+  animation:glow-pulse 2.5s infinite;transition:var(--trans);
+}
+.play-btn:hover{transform:scale(1.1)}
+.video-label{font-size:.8rem;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase}
+.video-bar{
+  position:absolute;bottom:0;left:0;right:0;
+  height:48px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);
+  display:flex;align-items:center;padding:0 16px;gap:12px;
+}
+.progress-track{flex:1;height:3px;background:rgba(255,255,255,.15);border-radius:2px}
+.progress-fill{
+  height:100%;width:35%;border-radius:2px;
+  background:linear-gradient(90deg,var(--f2),var(--f5));
+}
+.video-time{font-size:.75rem;color:rgba(255,255,255,.5)}
+.video-topbar{
+  position:absolute;top:0;left:0;right:0;height:40px;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(8px);
+  display:flex;align-items:center;padding:0 14px;gap:8px;
+}
+.dot-row{display:flex;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot-r{background:#FF5F57}
+.dot-y{background:#FEBC2E}
+.dot-g{background:#28C840}
+
+/* ── FLOATING STAT CARDS ──────────────────────────── */
+.float-card{
+  position:absolute;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:12px 16px;
+  box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:10px;
+  backdrop-filter:blur(12px);
+}
+.float-card-1{bottom:-20px;left:-60px;animation:float2 6s ease-in-out infinite}
+.float-card-2{top:20px;right:-50px;animation:float 8s ease-in-out infinite}
+.float-card-3{top:50%;right:-70px;animation:float2 7s ease-in-out infinite 1s}
+.float-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--f2),var(--f1));
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+  flex-shrink:0;
+}
+.float-info{display:flex;flex-direction:column;gap:2px}
+.float-val{font-size:1rem;font-weight:700;font-family:'Space Grotesk',sans-serif}
+.float-label{font-size:.7rem;color:var(--txt3)}
+.elo-badge{
+  background:linear-gradient(135deg,var(--f2),var(--f5));
+  color:#fff;border-radius:8px;padding:6px 12px;
+  font-size:.85rem;font-weight:700;font-family:'Space Grotesk',sans-serif;
+  flex-shrink:0;
+}
+
+/* ── STATS BAR ────────────────────────────────────── */
+.stats-bar{
+  padding:32px 0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--bg1);
+}
+.stats-grid{
+  display:flex;justify-content:space-around;flex-wrap:wrap;gap:20px;
+}
+.stat-item{text-align:center}
+.stat-num{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:2rem;font-weight:700;
+  background:linear-gradient(135deg,var(--f3),var(--f5));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.stat-label{font-size:.82rem;color:var(--txt3);margin-top:2px;text-transform:uppercase;letter-spacing:.06em}
+.stat-divider{width:1px;background:var(--border)}
+
+/* ── SECTION HEADER ───────────────────────────────── */
+.section-header{text-align:center;margin-bottom:60px}
+.section-header .badge{margin-bottom:16px}
+.section-header h2{margin-bottom:16px}
+.section-header p{max-width:560px;margin:0 auto;font-size:1.05rem}
+
+/* ── HOW IT WORKS ─────────────────────────────────── */
+.how-section{background:var(--bg1)}
+.steps-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  position:relative;
+}
+.steps-grid::before{
+  content:'';position:absolute;top:40px;left:12.5%;right:12.5%;
+  height:2px;background:linear-gradient(90deg,var(--f2),var(--f5));
+  opacity:.4;z-index:0;
+}
+.step{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;padding:24px 20px;
+}
+.step-num{
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--f2),var(--f1));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;color:#fff;
+  margin-bottom:20px;position:relative;
+  box-shadow:0 0 24px rgba(255,69,0,.4);
+}
+.step-icon{font-size:1.5rem;margin-bottom:14px}
+.step h3{font-size:1rem;margin-bottom:8px}
+.step p{font-size:.85rem;color:var(--txt3)}
+
+/* ── FEATURES ─────────────────────────────────────── */
+.features-section{background:var(--bg0)}
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:auto auto;
+  gap:20px;
+}
+.feature-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:28px;
+  transition:var(--trans);position:relative;overflow:hidden;
+}
+.feature-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at top left,rgba(255,69,0,.08),transparent 60%);
+  opacity:0;transition:var(--trans);
+}
+.feature-card:hover::before{opacity:1}
+.feature-card:hover{border-color:var(--border-fire);transform:translateY(-4px);box-shadow:var(--glow)}
+.feature-card.wide{grid-column:span 2}
+.feature-card.tall{grid-row:span 2}
+.feat-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(255,69,0,.2),rgba(255,160,64,.2));
+  border:1px solid var(--border-fire);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;margin-bottom:20px;
+}
+.feature-card h3{margin-bottom:10px;font-size:1.1rem}
+.feature-card p{font-size:.9rem;color:var(--txt3);line-height:1.7}
+.feat-tags{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+
+/* ── SKILL BARS ───────────────────────────────────── */
+.skill-bars{margin-top:20px;display:flex;flex-direction:column;gap:12px}
+.skill-bar-row{display:flex;flex-direction:column;gap:6px}
+.skill-bar-label{display:flex;justify-content:space-between;font-size:.8rem}
+.skill-bar-label span:last-child{color:var(--f3);font-weight:600}
+.skill-track{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.skill-fill{
+  height:100%;border-radius:3px;
+  background:linear-gradient(90deg,var(--f2),var(--f5));
+  width:0;transition:width 1.4s ease;
+}
+
+/* ── VIDEO GALLERY PREVIEW ────────────────────────── */
+.video-grid-preview{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;
+}
+.vid-thumb{
+  aspect-ratio:16/9;border-radius:10px;overflow:hidden;
+  background:var(--bg3);position:relative;cursor:pointer;
+}
+.vid-thumb::after{
+  content:'▶';position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;color:rgba(255,255,255,.7);
+  background:rgba(0,0,0,.3);opacity:0;transition:var(--trans);
+}
+.vid-thumb:hover::after{opacity:1}
+.vid-gradient{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--f1),#1a0050,#001a40);
+  opacity:.7;
+}
+.vid-label{
+  position:absolute;bottom:8px;left:8px;
+  font-size:.7rem;font-weight:600;color:#fff;
+  background:rgba(0,0,0,.6);padding:3px 8px;border-radius:999px;
+}
+
+/* ── SCIENCE ──────────────────────────────────────── */
+.science-section{
+  background:var(--bg1);
+  position:relative;overflow:hidden;
+}
+.science-content{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.science-left{display:flex;flex-direction:column;gap:28px}
+.science-point{
+  display:flex;gap:16px;align-items:flex-start;
+}
+.sci-num{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--f2),var(--f1));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0;
+  margin-top:2px;
+}
+.sci-text h4{margin-bottom:4px;font-size:1rem}
+.sci-text p{font-size:.88rem;color:var(--txt3)}
+.science-visual{
+  position:relative;display:flex;align-items:center;justify-content:center;
+}
+.brain-orb{
+  width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,69,0,.2) 0%,rgba(85,0,255,.15) 50%,transparent 80%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.brain-core{
+  width:120px;height:120px;border-radius:50%;
+  background:linear-gradient(135deg,var(--f2),#8800FF);
+  display:flex;align-items:center;justify-content:center;
+  font-size:3rem;
+  box-shadow:0 0 60px rgba(255,69,0,.5);
+  animation:glow-pulse 3s infinite;
+}
+.orbit-ring{
+  position:absolute;inset:0;border-radius:50%;
+  border:1px dashed rgba(255,69,0,.3);
+  animation:spin 12s linear infinite;
+}
+.orbit-dot{
+  position:absolute;top:-6px;left:calc(50% - 6px);
+  width:12px;height:12px;border-radius:50%;
+  background:var(--f3);box-shadow:0 0 12px var(--f3);
+}
+.orbit-ring-2{
+  position:absolute;inset:-30px;border-radius:50%;
+  border:1px dashed rgba(136,0,255,.3);
+  animation:spin 20s linear infinite reverse;
+}
+.orbit-dot-2{
+  position:absolute;bottom:-6px;left:calc(50% - 6px);
+  width:10px;height:10px;border-radius:50%;
+  background:#8800FF;box-shadow:0 0 12px #8800FF;
+}
+.sci-stats{display:flex;gap:24px;flex-wrap:wrap;margin-top:8px}
+.sci-stat{text-align:center;flex:1;min-width:100px}
+.sci-stat-num{
+  font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;
+  background:linear-gradient(135deg,var(--f3),var(--f5));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.sci-stat-label{font-size:.75rem;color:var(--txt3)}
+
+/* ── ELO RANKING ──────────────────────────────────── */
+.ranking-section{background:var(--bg0)}
+.ranking-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:start}
+.rank-chart-wrap{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:24px;
+}
+.chart-title{font-size:.85rem;color:var(--txt3);margin-bottom:16px;text-transform:uppercase;letter-spacing:.06em}
+.elo-chart{height:180px;position:relative;overflow:hidden}
+.chart-svg{width:100%;height:100%}
+.decay-zone{
+  position:absolute;right:20%;top:0;bottom:0;width:22%;
+  background:rgba(255,50,0,.05);
+  border-left:1px dashed rgba(255,69,0,.3);
+}
+.decay-label{
+  position:absolute;top:8px;right:22%;
+  font-size:.7rem;color:var(--f2);
+}
+.rank-tiers{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+.tier{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;border-radius:10px;
+  background:var(--bg2);border:1px solid var(--border);
+  transition:var(--trans);cursor:default;
+}
+.tier:hover{border-color:var(--border-fire);background:var(--bg3)}
+.tier-icon{font-size:1.3rem;width:32px;text-align:center}
+.tier-name{font-weight:600;font-size:.9rem;flex:1}
+.tier-elo{font-size:.8rem;color:var(--txt3);margin-right:8px}
+.tier-bar{
+  width:80px;height:4px;border-radius:2px;
+  background:var(--bg1);overflow:hidden;
+}
+.tier-fill{height:100%;border-radius:2px}
+.leaderboard{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);overflow:hidden;
+}
+.lb-header{
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.lb-header h3{font-size:1rem}
+.lb-filters{display:flex;gap:8px}
+.lb-filter{
+  padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:600;
+  background:var(--bg3);color:var(--txt3);transition:var(--trans);cursor:pointer;border:none;
+}
+.lb-filter.active{background:linear-gradient(135deg,var(--f2),var(--f1));color:#fff}
+.lb-row{
+  display:flex;align-items:center;padding:14px 20px;gap:14px;
+  border-bottom:1px solid var(--border);transition:var(--trans);
+}
+.lb-row:last-child{border-bottom:none}
+.lb-row:hover{background:var(--bg2)}
+.lb-row.me{background:rgba(255,69,0,.05);border-left:3px solid var(--f2)}
+.lb-rank{
+  font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;
+  width:28px;text-align:center;
+}
+.lb-rank.gold{color:var(--f5)}
+.lb-rank.silver{color:#C0C0D0}
+.lb-rank.bronze{color:#CD7F32}
+.lb-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--f2),var(--f5));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;font-weight:700;color:#fff;flex-shrink:0;
+}
+.lb-info{flex:1}
+.lb-name{font-weight:600;font-size:.9rem}
+.lb-sport{font-size:.75rem;color:var(--txt3)}
+.lb-elo-val{
+  font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;
+  color:var(--f3);
+}
+.lb-delta{font-size:.75rem;margin-left:4px}
+.lb-delta.up{color:#22DD88}
+.lb-delta.down{color:var(--f2)}
+
+/* ── NEUROVIZUAL ──────────────────────────────────── */
+.neuro-section{background:var(--bg1);overflow:hidden}
+.neuro-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.neuro-left{display:flex;flex-direction:column;gap:24px}
+.neuro-benefits{display:flex;flex-direction:column;gap:14px}
+.neuro-benefit{display:flex;gap:12px;align-items:flex-start}
+.nb-icon{
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(255,69,0,.15);border:1px solid var(--border-fire);
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;
+  flex-shrink:0;margin-top:2px;
+}
+.nb-text h4{font-size:.9rem;margin-bottom:2px}
+.nb-text p{font-size:.82rem;color:var(--txt3)}
+.game-arena{
+  background:var(--bg0);border:1px solid var(--border-fire);
+  border-radius:var(--radius-lg);overflow:hidden;
+  box-shadow:var(--glow),var(--shadow);
+}
+.game-header{
+  padding:14px 20px;background:var(--card);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.game-title{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.live-dot{
+  width:8px;height:8px;border-radius:50%;background:#22DD88;
+  box-shadow:0 0 8px #22DD88;animation:pulse 1.5s infinite;
+}
+.game-stats{display:flex;gap:20px}
+.gs-item{text-align:center}
+.gs-val{
+  font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;
+  color:var(--f3);
+}
+.gs-label{font-size:.7rem;color:var(--txt3)}
+#gameCanvas{
+  display:block;width:100%;aspect-ratio:4/3;
+  cursor:crosshair;background:radial-gradient(ellipse at center,#0A0820,#030308);
+}
+.game-footer{
+  padding:12px 20px;background:var(--card);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.combo-bar{display:flex;align-items:center;gap:10px;flex:1}
+.combo-label{font-size:.75rem;color:var(--txt3)}
+.combo-track{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.combo-fill{height:100%;width:0;border-radius:3px;
+  background:linear-gradient(90deg,var(--f2),var(--f5));transition:width .3s ease}
+.start-btn{
+  padding:8px 20px;border-radius:8px;font-size:.85rem;font-weight:600;
+  background:linear-gradient(135deg,var(--f2),var(--f1));color:#fff;
+  transition:var(--trans);
+}
+.start-btn:hover{opacity:.85}
+.start-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── PRICING ──────────────────────────────────────── */
+.pricing-section{background:var(--bg0)}
+.pricing-toggle{
+  display:flex;align-items:center;gap:14px;justify-content:center;margin-bottom:48px;
+}
+.toggle-label{font-size:.9rem;color:var(--txt2)}
+.toggle-switch{
+  width:52px;height:28px;border-radius:999px;
+  background:var(--surface);border:1px solid var(--border);
+  position:relative;cursor:pointer;transition:var(--trans);
+}
+.toggle-switch.active{background:linear-gradient(135deg,var(--f2),var(--f1))}
+.toggle-knob{
+  position:absolute;top:3px;left:3px;
+  width:20px;height:20px;border-radius:50%;background:#fff;
+  transition:var(--trans);
+}
+.toggle-switch.active .toggle-knob{left:27px}
+.discount-badge{
+  padding:4px 10px;border-radius:999px;font-size:.75rem;font-weight:700;
+  background:rgba(34,221,136,.15);color:#22DD88;border:1px solid rgba(34,221,136,.3);
+}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.price-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:36px 28px;
+  position:relative;transition:var(--trans);
+}
+.price-card:hover{transform:translateY(-4px);border-color:var(--border-fire);box-shadow:var(--glow)}
+.price-card.featured{
+  border-color:var(--f2);
+  background:linear-gradient(180deg,rgba(255,69,0,.08),var(--card));
+  box-shadow:var(--glow);
+}
+.popular-badge{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  padding:5px 20px;border-radius:999px;font-size:.78rem;font-weight:700;
+  background:linear-gradient(135deg,var(--f2),var(--f1));color:#fff;
+  white-space:nowrap;
+}
+.price-name{font-size:.85rem;color:var(--txt3);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.price-amount{
+  font-family:'Space Grotesk',sans-serif;font-size:3rem;font-weight:700;
+  line-height:1;margin-bottom:4px;
+}
+.price-amount sup{font-size:1.2rem;vertical-align:top;margin-top:10px;color:var(--txt2)}
+.price-amount span{font-size:1rem;color:var(--txt3)}
+.price-sub{font-size:.82rem;color:var(--txt3);margin-bottom:24px}
+.price-divider{height:1px;background:var(--border);margin:24px 0}
+.price-features{display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
+.pf-item{display:flex;align-items:center;gap:10px;font-size:.88rem}
+.pf-item .check{color:var(--f3);font-size:.9rem}
+.pf-item .cross{color:var(--txt3);font-size:.9rem}
+.pf-item.muted{color:var(--txt3)}
+
+/* ── TESTIMONIALS ─────────────────────────────────── */
+.testi-section{background:var(--bg1)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.testi-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:28px;
+  transition:var(--trans);
+}
+.testi-card:hover{border-color:var(--border-fire);transform:translateY(-3px)}
+.testi-stars{display:flex;gap:3px;margin-bottom:16px}
+.star{color:var(--f5);font-size:.9rem}
+.testi-text{font-size:.9rem;color:var(--txt2);line-height:1.75;margin-bottom:20px;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--f2),var(--f5));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;font-weight:700;color:#fff;flex-shrink:0;
+}
+.testi-name{font-weight:600;font-size:.9rem}
+.testi-role{font-size:.78rem;color:var(--txt3)}
+
+/* ── FAQ ──────────────────────────────────────────── */
+.faq-section{background:var(--bg0)}
+.faq-list{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.faq-item{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;transition:var(--trans);
+}
+.faq-item.open{border-color:var(--border-fire)}
+.faq-q{
+  width:100%;padding:20px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  background:none;color:var(--txt1);font-size:.95rem;font-weight:600;text-align:left;
+}
+.faq-arrow{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--bg3);display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;transition:var(--trans);flex-shrink:0;
+}
+.faq-item.open .faq-arrow{transform:rotate(180deg);background:var(--f2);color:#fff}
+.faq-a{
+  max-height:0;overflow:hidden;transition:max-height .4s ease;
+}
+.faq-item.open .faq-a{max-height:300px}
+.faq-a-inner{padding:0 24px 20px;font-size:.9rem;color:var(--txt3);line-height:1.75}
+
+/* ── CTA BANNER ───────────────────────────────────── */
+.cta-section{
+  padding:80px 0;
+  background:linear-gradient(135deg,rgba(255,69,0,.12),rgba(85,0,255,.08));
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.cta-orb{
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:.3;pointer-events:none;
+}
+.cta-orb-1{width:400px;height:400px;background:var(--f2);top:-200px;right:-100px}
+.cta-orb-2{width:300px;height:300px;background:#5500FF;bottom:-150px;left:-50px}
+.cta-inner{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:24px}
+.cta-inner h2{font-size:clamp(1.8rem,3vw,2.6rem)}
+.cta-inner p{max-width:480px;font-size:1.05rem}
+.cta-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+
+/* ── FOOTER ───────────────────────────────────────── */
+footer{background:var(--bg1);border-top:1px solid var(--border);padding:60px 0 32px}
+.footer-grid{
+  display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;
+}
+.footer-brand{display:flex;flex-direction:column;gap:16px}
+.footer-brand p{font-size:.88rem;color:var(--txt3);max-width:260px}
+.social-row{display:flex;gap:10px;margin-top:4px}
+.social-btn{
+  width:36px;height:36px;border-radius:9px;
+  background:var(--surface);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;color:var(--txt2);transition:var(--trans);
+}
+.social-btn:hover{border-color:var(--f3);color:var(--f3)}
+.footer-col h4{font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--txt3);margin-bottom:16px}
+.footer-col ul{display:flex;flex-direction:column;gap:10px}
+.footer-col a{font-size:.88rem;color:var(--txt3);transition:var(--trans)}
+.footer-col a:hover{color:var(--txt1)}
+.footer-bottom{
+  border-top:1px solid var(--border);padding-top:28px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+}
+.footer-bottom p{font-size:.82rem;color:var(--txt3)}
+.footer-legal{display:flex;gap:20px}
+.footer-legal a{font-size:.82rem;color:var(--txt3);transition:var(--trans)}
+.footer-legal a:hover{color:var(--txt1)}
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media(max-width:1024px){
+  .hero-content{grid-template-columns:1fr;gap:48px}
+  .hero-right{order:-1}
+  .video-mockup{max-width:500px;margin:0 auto}
+  .float-card-1,.float-card-2,.float-card-3{display:none}
+  .features-grid{grid-template-columns:1fr 1fr}
+  .feature-card.wide{grid-column:span 1}
+  .science-content,.ranking-layout,.neuro-layout{grid-template-columns:1fr;gap:40px}
+  .steps-grid{grid-template-columns:repeat(2,1fr)}
+  .steps-grid::before{display:none}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+}
+@media(max-width:768px){
+  .nav-links,.nav-actions .btn{display:none}
+  .hamburger{display:flex}
+  .section{padding:70px 0}
+  .hero{padding:100px 0 60px}
+  .hero-content{gap:36px}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .features-grid{grid-template-columns:1fr}
+  .pricing-grid,.testi-grid{grid-template-columns:1fr;gap:16px}
+  .steps-grid{grid-template-columns:1fr;gap:0}
+  .ranking-layout{gap:28px}
+  .footer-grid{grid-template-columns:1fr;gap:28px}
+  .hero-cta{flex-direction:column;align-items:stretch}
+  .hero-cta .btn{justify-content:center}
+}
+@media(max-width:480px){
+  .container{padding:0 16px}
+  h1{font-size:2.2rem}
+  .stats-grid{flex-direction:column;gap:12px}
+  .stat-divider{display:none}
+  .pricing-toggle{flex-direction:column;gap:8px}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAVIGATION ─────────────────────────────────── -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">🔥</div>
+      <span>FORGE</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Funkce</a>
+      <a href="#science">Věda</a>
+      <a href="#ranking">Ranking</a>
+      <a href="#neuro">NeuroHry</a>
+      <a href="#pricing">Ceny</a>
+      <a href="#contact">Kontakt</a>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" title="Přepnout téma">☀️</button>
+      <a href="#pricing" class="btn btn-secondary" style="padding:10px 20px;font-size:.88rem">Přihlásit se</a>
+      <a href="#pricing" class="btn btn-primary" style="padding:10px 20px;font-size:.88rem">Začít zdarma</a>
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features" class="mobile-link">Funkce</a>
+  <a href="#science" class="mobile-link">Věda</a>
+  <a href="#ranking" class="mobile-link">Ranking</a>
+  <a href="#neuro" class="mobile-link">NeuroHry</a>
+  <a href="#pricing" class="mobile-link">Ceny</a>
+  <a href="#contact" class="mobile-link">Kontakt</a>
+  <a href="#pricing" class="btn btn-primary">Začít zdarma →</a>
+</div>
+
+<!-- ─── HERO ────────────────────────────────────────── -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <div class="hero-grid-lines"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="hero-eyebrow">
+          <span class="badge">Nová éra tréninku</span>
+          <div class="hero-sports">
+            <span class="sport-pill">🏒 Hokej</span>
+            <span class="sport-pill">🏑 Florbal</span>
+          </div>
+        </div>
+        <h1 class="hero-title">
+          Vykuj svůj<br>
+          <em class="fire-text">potenciál.</em><br>
+          Trénuj jako pro.
+        </h1>
+        <p class="hero-subtitle">
+          Instruktážní videa, neurovizuální minihry a AI‑driven ELO systém v jedné platformě.
+          Stačí 10 minut denně — a tvoje forma stoupá.
+        </p>
+        <div class="hero-cta">
+          <a href="#pricing" class="btn btn-primary" style="font-size:1rem;padding:16px 32px">
+            Začít zdarma →
+          </a>
+          <a href="#neuro" class="btn btn-outline" style="font-size:1rem;padding:16px 28px">
+            ▶ Vyzkoušet demo
+          </a>
+        </div>
+        <div class="hero-social-proof">
+          <div class="avatars">
+            <div class="avatar">MK</div>
+            <div class="avatar">JP</div>
+            <div class="avatar">TN</div>
+            <div class="avatar">RS</div>
+            <div class="avatar" style="background:linear-gradient(135deg,var(--f2),#8800FF)">+</div>
+          </div>
+          <p class="proof-text"><strong>2 400+</strong> hráčů aktivně trénuje na FORGE</p>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="video-mockup">
+          <div class="video-topbar">
+            <div class="dot-row">
+              <div class="dot dot-r"></div>
+              <div class="dot dot-y"></div>
+              <div class="dot dot-g"></div>
+            </div>
+          </div>
+          <div class="video-screen">
+            <div class="video-overlay-grid"></div>
+            <div class="video-content">
+              <div class="play-btn" id="heroPlayBtn">▶</div>
+              <span class="video-label">FORGE · Ukázka platformy</span>
+            </div>
+          </div>
+          <div class="video-bar">
+            <div class="progress-track"><div class="progress-fill"></div></div>
+            <span class="video-time">1:24 / 4:00</span>
+          </div>
+        </div>
+        <!-- Floating cards -->
+        <div class="float-card float-card-1">
+          <div class="float-icon">📈</div>
+          <div class="float-info">
+            <span class="float-val">+140 ELO</span>
+            <span class="float-label">Za tento měsíc</span>
+          </div>
+        </div>
+        <div class="float-card float-card-2">
+          <div class="float-icon">⚡</div>
+          <div class="float-info">
+            <span class="float-val">Série 14 dní</span>
+            <span class="float-label">Aktivní streak</span>
+          </div>
+        </div>
+        <div class="float-card float-card-3">
+          <div class="elo-badge">🏆 Platinum II</div>
+          <div class="float-info">
+            <span class="float-val">1 840 ELO</span>
+            <span class="float-label">Aktuální rank</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STATS BAR ────────────────────────────────────── -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num" data-count="2400">0</div>
+        <div class="stat-label">Aktivních hráčů</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num" data-count="480">0</div>
+        <div class="stat-label">Tréninkových videí</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num" data-count="12">0</div>
+        <div class="stat-label">Neurovizuálních her</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num" data-count="94">0</div>
+        <div class="stat-label">% hráčů se zlepšilo</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── HOW IT WORKS ────────────────────────────────── -->
+<section class="how-section section" id="how">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="badge">Jak to funguje</span>
+      <h2>4 kroky ke špičkové formě</h2>
+      <p>Jednoduchý systém, který tě bude motivovat každý den. Stačí 10 minut.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step reveal" style="transition-delay:.1s">
+        <div class="step-num">1</div>
+        <div class="step-icon">🏒</div>
+        <h3>Vyber svůj sport</h3>
+        <p>Hokej nebo florbal — nastav svůj profil a úroveň. Systém ti přizpůsobí program.</p>
+      </div>
+      <div class="step reveal" style="transition-delay:.2s">
+        <div class="step-num">2</div>
+        <div class="step-icon">📹</div>
+        <h3>Trénuj s videi</h3>
+        <p>Follow‑along cvičení s různou intenzitou. Systém posíluje tvé slabé stránky.</p>
+      </div>
+      <div class="step reveal" style="transition-delay:.3s">
+        <div class="step-num">3</div>
+        <div class="step-icon">🧠</div>
+        <h3>Hraj neurovizuální hry</h3>
+        <p>Minihry trénují reakce, periferní vidění a rychlé rozhodování pod tlakem.</p>
+      </div>
+      <div class="step reveal" style="transition-delay:.4s">
+        <div class="step-num">4</div>
+        <div class="step-icon">🏆</div>
+        <h3>Stoupej v rankingu</h3>
+        <p>Sbírej ELO, soupeř s přáteli a sleduj svůj postup v reálném čase.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURES ─────────────────────────────────────── -->
+<section class="features-section section" id="features">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="badge">Funkce platformy</span>
+      <h2>Vše, co potřebuješ k dokonalosti</h2>
+      <p>Kompletní ekosystém pro rozvoj dovedností hokejistů a florbalistů všech věkových kategorií.</p>
+    </div>
+    <div class="features-grid">
+      <!-- Card 1 – wide -->
+      <div class="feature-card wide reveal-left">
+        <div class="feat-icon">📹</div>
+        <h3>Instruktážní galerie videí</h3>
+        <p>Stovky follow‑along videí rozdělených do kategorií: dribbling, střela, vedení puku/míčku, pohyb. Více videí s různou intenzitou — vyber svou úroveň a stupňuj ji.</p>
+        <div class="feat-tags">
+          <span class="tag">Dribbling</span>
+          <span class="tag">Střela</span>
+          <span class="tag">Pohyb</span>
+          <span class="tag">Vedení puku</span>
+          <span class="tag">Kondice</span>
+        </div>
+        <div class="video-grid-preview" style="margin-top:20px">
+          <div class="vid-thumb"><div class="vid-gradient" style="background:linear-gradient(135deg,#FF2200,#330080)"></div><span class="vid-label">Dribbling Lv.3</span></div>
+          <div class="vid-thumb"><div class="vid-gradient" style="background:linear-gradient(135deg,#FF6B35,#003380)"></div><span class="vid-label">Střela Lv.2</span></div>
+          <div class="vid-thumb"><div class="vid-gradient" style="background:linear-gradient(135deg,#FFD700,#003820)"></div><span class="vid-label">Pohyb Lv.4</span></div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="feature-card reveal-right">
+        <div class="feat-icon">📊</div>
+        <h3>Personalizovaný trénink</h3>
+        <p>AI analyzuje tvoje výsledky a navrhuje trénink přesně pro tebe — posiluje slabé stránky a stupňuje intenzitu tam, kde jsi silný.</p>
+        <div class="skill-bars">
+          <div class="skill-bar-row">
+            <div class="skill-bar-label"><span>Dribbling</span><span>78%</span></div>
+            <div class="skill-track"><div class="skill-fill" style="--w:78%"></div></div>
+          </div>
+          <div class="skill-bar-row">
+            <div class="skill-bar-label"><span>Střela</span><span>54%</span></div>
+            <div class="skill-track"><div class="skill-fill" style="--w:54%"></div></div>
+          </div>
+          <div class="skill-bar-row">
+            <div class="skill-bar-label"><span>Pohyb</span><span>91%</span></div>
+            <div class="skill-track"><div class="skill-fill" style="--w:91%"></div></div>
+          </div>
+          <div class="skill-bar-row">
+            <div class="skill-bar-label"><span>Reakce</span><span>63%</span></div>
+            <div class="skill-track"><div class="skill-fill" style="--w:63%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="feature-card reveal">
+        <div class="feat-icon">🧠</div>
+        <h3>Neurovizuální minihry</h3>
+        <p>Sada miniher trénující reakci očí, mozku a těla na pohybující se objekty. Periferní vidění, rychlé rozhodování, přehled hřiště.</p>
+        <div class="feat-tags">
+          <span class="tag">Reakce</span>
+          <span class="tag">Periferní vidění</span>
+          <span class="tag">Rozhodování</span>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="feature-card reveal" style="transition-delay:.1s">
+        <div class="feat-icon">🔥</div>
+        <h3>ELO Ranking & Skill Decay</h3>
+        <p>Sbírej ELO body za pravidelný trénink. Bez tréninku dovednosti přirozeně klesají — jako v reálném sportu. Soupeř s přáteli a buď nejlepší ve svém okolí.</p>
+        <div class="feat-tags">
+          <span class="tag">ELO systém</span>
+          <span class="tag">Skill decay</span>
+          <span class="tag">Žebříček</span>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="feature-card reveal" style="transition-delay:.2s">
+        <div class="feat-icon">👥</div>
+        <h3>Trenérský režim</h3>
+        <p>Speciální sada videí a miniher pro trenéry. Zobrazuj na laptopu instrukce při skills tréninku — hráči reagují na vizuální podněty v reálném čase.</p>
+        <div class="feat-tags">
+          <span class="tag">Týmový trénink</span>
+          <span class="tag">Skills session</span>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="feature-card reveal" style="transition-delay:.3s">
+        <div class="feat-icon">🎮</div>
+        <h3>Gamifikace & Streaky</h3>
+        <p>Denní výzvy, série, odznaky a ligový systém — jako Duolingo, CS2 a LoL v jednom. Udržuje tě přikovaného k platformě i v netréninkový den.</p>
+        <div class="feat-tags">
+          <span class="tag">Denní výzvy</span>
+          <span class="tag">Ligy</span>
+          <span class="tag">Odznaky</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SCIENCE ───────────────────────────────────────── -->
+<section class="science-section section" id="science">
+  <div class="container">
+    <div class="science-content">
+      <div class="science-left reveal-left">
+        <span class="badge">Vědecký základ</span>
+        <h2>Trénink postavený na vědě</h2>
+        <div class="science-point">
+          <div class="sci-num">1</div>
+          <div class="sci-text">
+            <h4>Deliberate Practice — záměrný trénink</h4>
+            <p>K.A. Ericsson prokázal, že expertní výkon vyžaduje cílený opakovaný trénink konkrétních dovedností s okamžitou zpětnou vazbou. FORGE to přináší digitálně.</p>
+          </div>
+        </div>
+        <div class="science-point">
+          <div class="sci-num">2</div>
+          <div class="sci-text">
+            <h4>Neurovizuální trénink & sportovní výkon</h4>
+            <p>Studie ukazují, že trénink vizuálních reakcí (EyeQ, NeuroBall) zlepšuje čas reakce sportovce o 18–32 ms — kritická výhoda na vysoké úrovni.</p>
+          </div>
+        </div>
+        <div class="science-point">
+          <div class="sci-num">3</div>
+          <div class="sci-text">
+            <h4>Spaced Repetition & Memory Consolidation</h4>
+            <p>Krátké denní bloky (10–15 min) s rozloženým opakováním vedou k lepší konsolidaci dovednostní paměti než dlouhé nepravidelné tréninky.</p>
+          </div>
+        </div>
+        <div class="science-point">
+          <div class="sci-num">4</div>
+          <div class="sci-text">
+            <h4>Gamifikace a dopaminový feedback loop</h4>
+            <p>ELO systém a okamžité odměny aktivují dopaminové dráhy, čímž zvyšují frekvenci a kvalitu tréninku — stejný princip jako úspěšné mobilní hry.</p>
+          </div>
+        </div>
+        <div class="sci-stats">
+          <div class="sci-stat">
+            <div class="sci-stat-num">18×</div>
+            <div class="sci-stat-label">Lepší retence dovedností</div>
+          </div>
+          <div class="sci-stat">
+            <div class="sci-stat-num">32ms</div>
+            <div class="sci-stat-label">Rychlejší reakce</div>
+          </div>
+          <div class="sci-stat">
+            <div class="sci-stat-num">94%</div>
+            <div class="sci-stat-label">Hráčů se zlepšilo</div>
+          </div>
+        </div>
+      </div>
+      <div class="science-visual reveal-right">
+        <div class="brain-orb">
+          <div class="orbit-ring"><div class="orbit-dot"></div></div>
+          <div class="orbit-ring-2"><div class="orbit-dot-2"></div></div>
+          <div class="brain-core">🧠</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ELO RANKING ──────────────────────────────────── -->
+<section class="ranking-section section" id="ranking">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="badge">ELO Systém</span>
+      <h2>Soupeř. Stoupej. Dominuj.</h2>
+      <p>Spravedlivý ELO ranking motivuje každého hráče — od začátečníka po elitu. Skill decay zajišťuje, že forma odráží aktuální realitu.</p>
+    </div>
+    <div class="ranking-layout">
+      <div class="reveal-left" style="display:flex;flex-direction:column;gap:20px">
+        <div class="rank-chart-wrap">
+          <div class="chart-title">Vývoj ELO — posledních 60 dní</div>
+          <div class="elo-chart">
+            <div class="decay-zone"></div>
+            <div class="decay-label">Bez tréninku↗</div>
+            <svg class="chart-svg" viewBox="0 0 400 160" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="eloGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#FF4500" stop-opacity=".4"/>
+                  <stop offset="100%" stop-color="#FF4500" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,130 L30,120 L60,105 L90,90 L120,78 L150,65 L180,50 L210,42 L240,48 L260,58 L280,72 L300,65 L330,55 L360,45 L400,38"
+                fill="none" stroke="#FF6B35" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M0,130 L30,120 L60,105 L90,90 L120,78 L150,65 L180,50 L210,42 L240,48 L260,58 L280,72 L300,65 L330,55 L360,45 L400,38 L400,160 L0,160Z"
+                fill="url(#eloGrad)"/>
+              <!-- Decay markers -->
+              <line x1="200" y1="0" x2="200" y2="160" stroke="rgba(255,69,0,.2)" stroke-width="1" stroke-dasharray="4,4"/>
+              <circle cx="240" cy="48" r="5" fill="#FF2200"/>
+              <circle cx="400" cy="38" r="5" fill="#FFD700"/>
+            </svg>
+          </div>
+        </div>
+        <div class="rank-tiers">
+          <div class="tier"><span class="tier-icon">🥉</span><span class="tier-name">Bronze</span><span class="tier-elo">0–800</span><div class="tier-bar"><div class="tier-fill" style="width:25%;background:#CD7F32"></div></div></div>
+          <div class="tier"><span class="tier-icon">🥈</span><span class="tier-name">Silver</span><span class="tier-elo">800–1200</span><div class="tier-bar"><div class="tier-fill" style="width:45%;background:#C0C0D0"></div></div></div>
+          <div class="tier"><span class="tier-icon">🥇</span><span class="tier-name">Gold</span><span class="tier-elo">1200–1600</span><div class="tier-bar"><div class="tier-fill" style="width:65%;background:#FFD700"></div></div></div>
+          <div class="tier"><span class="tier-icon">💎</span><span class="tier-name">Platinum</span><span class="tier-elo">1600–2000</span><div class="tier-bar"><div class="tier-fill" style="width:80%;background:linear-gradient(90deg,#88DDFF,#8888FF)"></div></div></div>
+          <div class="tier"><span class="tier-icon">👑</span><span class="tier-name">Elite</span><span class="tier-elo">2000+</span><div class="tier-bar"><div class="tier-fill" style="width:95%;background:linear-gradient(90deg,var(--f2),var(--f5))"></div></div></div>
+        </div>
+      </div>
+      <div class="leaderboard reveal-right">
+        <div class="lb-header">
+          <h3>🏆 Žebříček — Hokej</h3>
+          <div class="lb-filters">
+            <button class="lb-filter active">Global</button>
+            <button class="lb-filter">Přátelé</button>
+            <button class="lb-filter">Kraj</button>
+          </div>
+        </div>
+        <div class="lb-row">
+          <span class="lb-rank gold">1</span>
+          <div class="lb-avatar" style="background:linear-gradient(135deg,#FFD700,#FF6B35)">MK</div>
+          <div class="lb-info"><div class="lb-name">Marek Krejčí</div><div class="lb-sport">🏒 HC Sparta Praha</div></div>
+          <span class="lb-elo-val">2 280<span class="lb-delta up">↑14</span></span>
+        </div>
+        <div class="lb-row">
+          <span class="lb-rank silver">2</span>
+          <div class="lb-avatar" style="background:linear-gradient(135deg,#C0C0D0,#8888AA)">JP</div>
+          <div class="lb-info"><div class="lb-name">Jan Procházka</div><div class="lb-sport">🏒 HC Kometa Brno</div></div>
+          <span class="lb-elo-val">2 140<span class="lb-delta up">↑7</span></span>
+        </div>
+        <div class="lb-row">
+          <span class="lb-rank bronze">3</span>
+          <div class="lb-avatar" style="background:linear-gradient(135deg,#CD7F32,#8B4513)">TN</div>
+          <div class="lb-info"><div class="lb-name">Tomáš Novák</div><div class="lb-sport">🏒 HC Oceláři Třinec</div></div>
+          <span class="lb-elo-val">1 990<span class="lb-delta down">↓3</span></span>
+        </div>
+        <div class="lb-row">
+          <span class="lb-rank" style="color:var(--txt3)">4</span>
+          <div class="lb-avatar" style="background:linear-gradient(135deg,#4488FF,#0022AA)">RS</div>
+          <div class="lb-info"><div class="lb-name">Radim Sýkora</div><div class="lb-sport">🏒 HC Motor ČB</div></div>
+          <span class="lb-elo-val">1 875<span class="lb-delta up">↑22</span></span>
+        </div>
+        <div class="lb-row">
+          <span class="lb-rank" style="color:var(--txt3)">5</span>
+          <div class="lb-avatar" style="background:linear-gradient(135deg,#22DD88,#008844)">LH</div>
+          <div class="lb-info"><div class="lb-name">Lukáš Horák</div><div class="lb-sport">🏒 HC Mountfield</div></div>
+          <span class="lb-elo-val">1 840<span class="lb-delta up">↑5</span></span>
+        </div>
+        <div class="lb-row me">
+          <span class="lb-rank" style="color:var(--f3)">23</span>
+          <div class="lb-avatar" style="background:linear-gradient(135deg,var(--f2),var(--f5))">TY</div>
+          <div class="lb-info"><div class="lb-name">Ty (Jan Hráč)</div><div class="lb-sport">🏒 Lokální tým</div></div>
+          <span class="lb-elo-val">1 240<span class="lb-delta up">↑48</span></span>
+        </div>
+        <div style="padding:16px 20px;text-align:center">
+          <a href="#pricing" class="btn btn-primary" style="font-size:.85rem;padding:10px 24px">Připojit se a soupeřit →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── NEUROVIZUAL GAME ──────────────────────────────── -->
+<section class="neuro-section section" id="neuro">
+  <div class="container">
+    <div class="neuro-layout">
+      <div class="neuro-left reveal-left">
+        <span class="badge">Neurovizuální trénink</span>
+        <h2>Trénuj mozek, ne jen tělo</h2>
+        <p>Rychlost reakce, periferní vidění a rozhodování pod tlakem — vlastnosti, které odlišují průměrného hráče od elity. Vyzkoušej si demo přímo teď.</p>
+        <div class="neuro-benefits">
+          <div class="neuro-benefit">
+            <div class="nb-icon">👁️</div>
+            <div class="nb-text">
+              <h4>Periferní vidění</h4>
+              <p>Sleduj objekty mimo střed pohledu — jako přehled hřiště v reálu.</p>
+            </div>
+          </div>
+          <div class="neuro-benefit">
+            <div class="nb-icon">⚡</div>
+            <div class="nb-text">
+              <h4>Rychlost reakce</h4>
+              <p>Reaguj na vizuální podněty v milisekundách. Sleduj svůj progres v čase.</p>
+            </div>
+          </div>
+          <div class="neuro-benefit">
+            <div class="nb-icon">🎯</div>
+            <div class="nb-text">
+              <h4>Rozhodování pod tlakem</h4>
+              <p>Barevné kódy a symboly trénují rychlé, přesné rozhodování — jako při střele.</p>
+            </div>
+          </div>
+          <div class="neuro-benefit">
+            <div class="nb-icon">📊</div>
+            <div class="nb-text">
+              <h4>Přehled statistik reakcí</h4>
+              <p>Sleduj průměrný reakční čas, přesnost a porovnávej se s ostatními.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="game-arena">
+          <div class="game-header">
+            <div class="game-title">
+              <div class="live-dot"></div>
+              NeuroReact — Reakční demo
+            </div>
+            <div class="game-stats">
+              <div class="gs-item">
+                <div class="gs-val" id="gameScore">0</div>
+                <div class="gs-label">Skóre</div>
+              </div>
+              <div class="gs-item">
+                <div class="gs-val" id="gameReaction">—</div>
+                <div class="gs-label">Reakce ms</div>
+              </div>
+              <div class="gs-item">
+                <div class="gs-val" id="gameTime">30</div>
+                <div class="gs-label">Sekund</div>
+              </div>
+            </div>
+          </div>
+          <canvas id="gameCanvas" width="480" height="360"></canvas>
+          <div class="game-footer">
+            <div class="combo-bar">
+              <span class="combo-label">COMBO</span>
+              <div class="combo-track"><div class="combo-fill" id="comboFill"></div></div>
+              <span class="gs-val" id="comboVal" style="font-size:.85rem">x1</span>
+            </div>
+            <button class="start-btn" id="startGameBtn">▶ Spustit demo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PRICING ───────────────────────────────────────── -->
+<section class="pricing-section section" id="pricing">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="badge">Ceník</span>
+      <h2>Investice, která se vyplatí</h2>
+      <p>Žádné skryté poplatky. Zrušení kdykoliv. Vyzkoušej zdarma po dobu 14 dní.</p>
+    </div>
+    <div class="pricing-toggle">
+      <span class="toggle-label">Měsíčně</span>
+      <div class="toggle-switch" id="billingToggle"><div class="toggle-knob"></div></div>
+      <span class="toggle-label">Ročně</span>
+      <span class="discount-badge">Ušetři 30%</span>
+    </div>
+    <div class="pricing-grid">
+      <!-- Free -->
+      <div class="price-card reveal-left">
+        <div class="price-name">Starter</div>
+        <div class="price-amount"><sup>Kč</sup>0<span>/měs</span></div>
+        <div class="price-sub">Navždy zdarma</div>
+        <div class="price-divider"></div>
+        <div class="price-features">
+          <div class="pf-item"><span class="check">✦</span> 10 tréninkových videí</div>
+          <div class="pf-item"><span class="check">✦</span> 2 neurovizuální minihry</div>
+          <div class="pf-item"><span class="check">✦</span> ELO ranking (globální)</div>
+          <div class="pf-item"><span class="check">✦</span> Denní výzvy</div>
+          <div class="pf-item muted"><span class="cross">✕</span> Personalizovaný program</div>
+          <div class="pf-item muted"><span class="cross">✕</span> Skill decay analytika</div>
+          <div class="pf-item muted"><span class="cross">✕</span> Trenérský režim</div>
+        </div>
+        <a href="#" class="btn btn-outline" style="width:100%;justify-content:center">Začít zdarma</a>
+      </div>
+      <!-- Pro - featured -->
+      <div class="price-card featured reveal">
+        <div class="popular-badge">⭐ Nejoblíbenější</div>
+        <div class="price-name">Pro Hráč</div>
+        <div class="price-amount fire-text" id="proPrice"><sup>Kč</sup>249<span>/měs</span></div>
+        <div class="price-sub">Vše pro maximální rozvoj</div>
+        <div class="price-divider"></div>
+        <div class="price-features">
+          <div class="pf-item"><span class="check" style="color:var(--f3)">✦</span> Všechna tréninkový videa (480+)</div>
+          <div class="pf-item"><span class="check" style="color:var(--f3)">✦</span> Všechny neurovizuální hry</div>
+          <div class="pf-item"><span class="check" style="color:var(--f3)">✦</span> AI personalizovaný program</div>
+          <div class="pf-item"><span class="check" style="color:var(--f3)">✦</span> ELO + Skill decay analytika</div>
+          <div class="pf-item"><span class="check" style="color:var(--f3)">✦</span> Přátelé & soukromé ligy</div>
+          <div class="pf-item"><span class="check" style="color:var(--f3)">✦</span> Detailní statistiky reakcí</div>
+          <div class="pf-item muted"><span class="cross">✕</span> Trenérský režim</div>
+        </div>
+        <a href="#" class="btn btn-primary" style="width:100%;justify-content:center">Začít 14 dní zdarma →</a>
+      </div>
+      <!-- Coach -->
+      <div class="price-card reveal-right">
+        <div class="price-name">Trenér / Tým</div>
+        <div class="price-amount" id="coachPrice"><sup>Kč</sup>790<span>/měs</span></div>
+        <div class="price-sub">Pro celý tým a coaches</div>
+        <div class="price-divider"></div>
+        <div class="price-features">
+          <div class="pf-item"><span class="check">✦</span> Vše z Pro Hráč plánu</div>
+          <div class="pf-item"><span class="check">✦</span> Trenérský dashboard</div>
+          <div class="pf-item"><span class="check">✦</span> Interaktivní skills session</div>
+          <div class="pf-item"><span class="check">✦</span> Exkluzivní trenérská videa</div>
+          <div class="pf-item"><span class="check">✦</span> Až 25 hráčů v týmu</div>
+          <div class="pf-item"><span class="check">✦</span> Týmové statistiky & reporty</div>
+          <div class="pf-item"><span class="check">✦</span> Prioritní podpora</div>
+        </div>
+        <a href="#" class="btn btn-secondary" style="width:100%;justify-content:center">Kontaktovat nás</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TESTIMONIALS ──────────────────────────────────── -->
+<section class="testi-section section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="badge">Recenze</span>
+      <h2>Co říkají hráči</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal-left">
+        <div class="testi-stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testi-text">„Za 6 týdnů jsem zlepšil svůj reakční čas o 28 ms. Na tréninku mi trenér řekl, že jsem se viditelně zlepšil v přehledu hřiště. FORGE funguje."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">MK</div>
+          <div>
+            <div class="testi-name">Marek K., 17 let</div>
+            <div class="testi-role">🏒 HC Sparta Praha, mládež</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testi-text">„Jako trenér jsem zavedl FORGE na skills trénincích. Hráči reagují na vizuální signály z laptopu před střelou — úroveň rozhodování vzrostla rapidně."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">PV</div>
+          <div>
+            <div class="testi-name">Pavel V., trenér</div>
+            <div class="testi-role">🏒 HC Kometa Brno B-tým</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal-right">
+        <div class="testi-stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testi-text">„ELO ranking mě drží u platformy každý den. Soupeřím se svými kamarády a nechci klesat. 10 minut večer — to je moje rutina. Doporučuji všem."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">TL</div>
+          <div>
+            <div class="testi-name">Tomáš L., 24 let</div>
+            <div class="testi-role">🏑 FbC Sokol Praha</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FAQ ───────────────────────────────────────────── -->
+<section class="faq-section section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="badge">FAQ</span>
+      <h2>Časté otázky</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q">Jak funguje Skill Decay?<div class="faq-arrow">▼</div></button>
+        <div class="faq-a"><p class="faq-a-inner">Pokud netrénuješ pravidelně, tvoje ELO začne pomalu klesat — podobně jako v reálném sportu, kde bez tréninku forma klesá. Decay je nastaven přiměřeně, aby motivoval bez zbytečné frustrace. Po 3 dnech bez aktivity začíná mírný pokles, který se postupně zrychluje.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Kolik času denně potřebuji?<div class="faq-arrow">▼</div></button>
+        <div class="faq-a"><p class="faq-a-inner">FORGE je navržen pro krátké 10minutové bloky, které lze zařadit kamkoliv. Věda dokazuje, že pravidelné krátké tréninky jsou efektivnější než nepravidelné dlouhé. Samozřejmě můžeš trénovat i déle — záleží jen na tobě.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Je platforma vhodná pro děti?<div class="faq-arrow">▼</div></button>
+        <div class="faq-a"><p class="faq-a-inner">Ano! FORGE je navržen pro hráče všech věkových kategorií. Pro mladší hráče jsou videa i hry přizpůsobeny věku a úrovni. Rodiče mohou vytvořit rodinný účet a sledovat pokrok svého dítěte.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Jaký sport platforma podporuje?<div class="faq-arrow">▼</div></button>
+        <div class="faq-a"><p class="faq-a-inner">Aktuálně hokej a florbal. V plánu jsou další lední sporty a halové sporty. Obsah je pečlivě rozdělen podle sportu, pozice a herní úrovně.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Mohu zrušit předplatné kdykoliv?<div class="faq-arrow">▼</div></button>
+        <div class="faq-a"><p class="faq-a-inner">Absolutně. Žádné závazky, žádné poplatky za zrušení. Zrušit předplatné lze jedním kliknutím v nastavení účtu. Po zrušení přejdeš automaticky na Starter (bezplatný) plán.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA BANNER ────────────────────────────────────── -->
+<section class="cta-section" id="contact">
+  <div class="cta-orb cta-orb-1"></div>
+  <div class="cta-orb cta-orb-2"></div>
+  <div class="container">
+    <div class="cta-inner">
+      <span class="badge">Začni dnes</span>
+      <h2>Připraven <em class="fire-text">vykovat</em> svůj potenciál?</h2>
+      <p>Přidej se ke 2 400+ hráčům, kteří trénují chytřeji, ne jen tvrdě. První 14 dní zdarma — kreditní karta nepotřeba.</p>
+      <div class="cta-btns">
+        <a href="#pricing" class="btn btn-primary" style="font-size:1.05rem;padding:16px 36px">Začít zdarma →</a>
+        <a href="mailto:info@forge.gg" class="btn btn-outline" style="font-size:1.05rem;padding:16px 28px">Kontaktovat nás</a>
+      </div>
+      <p style="font-size:.82rem;color:var(--txt3);margin-top:4px">✓ Žádná kreditní karta &nbsp;✓ Zrušení kdykoliv &nbsp;✓ 14 dní zdarma</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo" style="font-size:1.4rem">
+          <div class="nav-logo-icon">🔥</div>
+          <span>FORGE</span>
+        </a>
+        <p>Platforma nové generace pro rozvoj hokejových a florbalistických dovedností. Trénuj chytřeji.</p>
+        <div class="social-row">
+          <a href="#" class="social-btn" title="Instagram">📸</a>
+          <a href="#" class="social-btn" title="TikTok">🎵</a>
+          <a href="#" class="social-btn" title="YouTube">▶</a>
+          <a href="#" class="social-btn" title="Discord">💬</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Platforma</h4>
+        <ul>
+          <li><a href="#features">Funkce</a></li>
+          <li><a href="#science">Vědecký základ</a></li>
+          <li><a href="#ranking">ELO Ranking</a></li>
+          <li><a href="#neuro">NeuroHry</a></li>
+          <li><a href="#pricing">Ceník</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Sporty</h4>
+        <ul>
+          <li><a href="#">🏒 Hokej</a></li>
+          <li><a href="#">🏑 Florbal</a></li>
+          <li><a href="#">👥 Týmy</a></li>
+          <li><a href="#">🎓 Mládež</a></li>
+          <li><a href="#">🏋️ Kondice</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Firma</h4>
+        <ul>
+          <li><a href="#">O nás</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Kariéra</a></li>
+          <li><a href="mailto:info@forge.gg">Kontakt</a></li>
+          <li><a href="#">Press kit</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 FORGE Sports Intelligence s.r.o. Všechna práva vyhrazena.</p>
+      <div class="footer-legal">
+        <a href="#">Podmínky použití</a>
+        <a href="#">Ochrana soukromí</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── SCRIPTS ────────────────────────────────────────── -->
+<script>
+/* ── THEME TOGGLE ─────────────────────────────────── */
+const themeToggle = document.getElementById('themeToggle');
+let isDark = true;
+themeToggle.addEventListener('click', () => {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  themeToggle.textContent = isDark ? '☀️' : '🌙';
+});
+
+/* ── HAMBURGER MENU ───────────────────────────────── */
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+mobileMenu.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  });
+});
+
+/* ── NAV SCROLL ───────────────────────────────────── */
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+/* ── SCROLL REVEAL ────────────────────────────────── */
+const revealEls = document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => revealObs.observe(el));
+
+/* ── COUNTER ANIMATION ────────────────────────────── */
+const counters = document.querySelectorAll('[data-count]');
+const countObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    const target = parseInt(el.dataset.count);
+    const suffix = target >= 1000 ? '+' : (el.dataset.suffix || (target < 100 && el.closest('.stat-item')?.querySelector('.stat-label')?.textContent.includes('%') ? '%' : '+'));
+    let start = 0;
+    const dur = 1800;
+    const step = (ts) => {
+      if (!start) start = ts;
+      const pct = Math.min((ts - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - pct, 3);
+      el.textContent = Math.floor(eased * target).toLocaleString('cs-CZ') + (pct >= 1 ? (target >= 100 ? (target === 94 ? '%' : '+') : '+') : '');
+      if (pct < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+    countObs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => countObs.observe(c));
+
+/* ── SKILL BARS ───────────────────────────────────── */
+const skillObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.querySelectorAll('.skill-fill').forEach(fill => {
+      fill.style.width = fill.style.getPropertyValue('--w') || getComputedStyle(fill).getPropertyValue('--w');
+    });
+    skillObs.unobserve(e.target);
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.feature-card').forEach(c => skillObs.observe(c));
+
+/* ── FAQ ACCORDION ────────────────────────────────── */
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+/* ── PRICING TOGGLE ───────────────────────────────── */
+const billingToggle = document.getElementById('billingToggle');
+const proPrice = document.getElementById('proPrice');
+const coachPrice = document.getElementById('coachPrice');
+let isYearly = false;
+billingToggle.addEventListener('click', () => {
+  isYearly = !isYearly;
+  billingToggle.classList.toggle('active', isYearly);
+  proPrice.innerHTML = isYearly ? '<sup>Kč</sup>175<span>/měs</span>' : '<sup>Kč</sup>249<span>/měs</span>';
+  coachPrice.innerHTML = isYearly ? '<sup>Kč</sup>553<span>/měs</span>' : '<sup>Kč</sup>790<span>/měs</span>';
+  if (isYearly) {
+    proPrice.classList.add('fire-text');
+    coachPrice.classList.remove('fire-text');
+  } else {
+    proPrice.classList.add('fire-text');
+  }
+});
+
+/* ── LEADERBOARD FILTERS ──────────────────────────── */
+document.querySelectorAll('.lb-filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.closest('.lb-filters').querySelectorAll('.lb-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+/* ── NEUROVIZUAL MINI-GAME ────────────────────────── */
+(function() {
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const scoreEl = document.getElementById('gameScore');
+  const reactionEl = document.getElementById('gameReaction');
+  const timeEl = document.getElementById('gameTime');
+  const comboFill = document.getElementById('comboFill');
+  const comboVal = document.getElementById('comboVal');
+  const startBtn = document.getElementById('startGameBtn');
+
+  let running = false, score = 0, combo = 1, timeLeft = 30;
+  let targets = [], timer = null, spawnTimer = null;
+  let lastSpawn = 0, totalReaction = 0, reactionCount = 0;
+
+  const W = canvas.width, H = canvas.height;
+
+  const COLORS = [
+    { bg: '#FF4500', glow: '#FF6B35', label: '●', points: 10 },
+    { bg: '#FFD700', glow: '#FFA040', label: '◆', points: 15 },
+    { bg: '#22DD88', glow: '#44FFAA', label: '▲', points: 12 },
+    { bg: '#4488FF', glow: '#88BBFF', label: '■', points: 8 },
+  ];
+
+  function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const scale = Math.min(1, rect.width / W);
+    canvas.style.width = (W * scale) + 'px';
+    canvas.style.height = (H * scale) + 'px';
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function spawnTarget() {
+    const margin = 50;
+    const c = COLORS[Math.floor(Math.random() * COLORS.length)];
+    const r = 22 + Math.random() * 12;
+    targets.push({
+      x: margin + Math.random() * (W - margin * 2),
+      y: margin + Math.random() * (H - margin * 2),
+      r, color: c, born: performance.now(),
+      life: 1600 + Math.random() * 800,
+      scale: 0, hit: false,
+      vx: (Math.random() - .5) * 1.4,
+      vy: (Math.random() - .5) * 1.4,
+    });
+  }
+
+  function drawBg() {
+    ctx.fillStyle = '#030308';
+    ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(255,69,0,0.06)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+    for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+  }
+
+  function drawIdleScreen() {
+    drawBg();
+    ctx.save();
+    ctx.globalAlpha = .35;
+    for (let i = 0; i < 5; i++) {
+      const c = COLORS[i % COLORS.length];
+      const x = 80 + (i * 80), y = H / 2 + Math.sin(Date.now() / 800 + i) * 20;
+      ctx.shadowBlur = 30; ctx.shadowColor = c.glow;
+      ctx.fillStyle = c.bg;
+      ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+    ctx.fillStyle = 'rgba(240,240,255,0.5)';
+    ctx.font = 'bold 18px Inter,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('▶ Stiskni "Spustit demo"', W / 2, H / 2 + 60);
+  }
+
+  function drawGame(now) {
+    drawBg();
+    targets = targets.filter(t => {
+      const age = now - t.born;
+      if (age > t.life && !t.hit) return false;
+      if (t.hit && t.scale <= 0) return false;
+      return true;
+    });
+    targets.forEach(t => {
+      const age = now - t.born;
+      if (t.hit) { t.scale = Math.max(0, t.scale - 0.1); }
+      else { t.scale = Math.min(1, t.scale + 0.08); t.x += t.vx; t.y += t.vy; }
+      t.x = Math.max(t.r, Math.min(W - t.r, t.x));
+      t.y = Math.max(t.r, Math.min(H - t.r, t.y));
+      const alpha = t.hit ? t.scale : Math.min(1, (t.life - age) / 400);
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, alpha);
+      ctx.translate(t.x, t.y);
+      ctx.scale(t.scale, t.scale);
+      ctx.shadowBlur = 30; ctx.shadowColor = t.color.glow;
+      ctx.fillStyle = t.color.bg;
+      ctx.beginPath(); ctx.arc(0, 0, t.r, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#fff';
+      ctx.font = `bold ${t.r * 0.9}px Inter,sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(t.color.label, 0, 0);
+      if (!t.hit) {
+        const ratio = 1 - (age / t.life);
+        ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(0, 0, t.r + 4, -Math.PI / 2, -Math.PI / 2 + ratio * Math.PI * 2); ctx.stroke();
+      }
+      ctx.restore();
+    });
+    if (targets.length === 0 && running) spawnTarget();
+  }
+
+  function gameLoop(now) {
+    if (!running) { drawIdleScreen(); return; }
+    drawGame(now);
+    requestAnimationFrame(gameLoop);
+  }
+
+  function startGame() {
+    if (running) return;
+    running = true; score = 0; combo = 1; timeLeft = 30;
+    targets = []; totalReaction = 0; reactionCount = 0;
+    scoreEl.textContent = '0';
+    reactionEl.textContent = '—';
+    timeEl.textContent = '30';
+    comboFill.style.width = '0%';
+    comboVal.textContent = 'x1';
+    startBtn.disabled = true;
+    startBtn.textContent = '⏳ Běží...';
+    spawnTarget(); spawnTarget();
+    spawnTimer = setInterval(() => {
+      if (targets.filter(t => !t.hit).length < 3) spawnTarget();
+    }, 900);
+    timer = setInterval(() => {
+      timeLeft--;
+      timeEl.textContent = timeLeft;
+      if (timeLeft <= 0) endGame();
+    }, 1000);
+    requestAnimationFrame(gameLoop);
+  }
+
+  function endGame() {
+    running = false;
+    clearInterval(timer); clearInterval(spawnTimer);
+    startBtn.disabled = false;
+    startBtn.textContent = `▶ Znovu (${score} bodů)`;
+    const avgReaction = reactionCount > 0 ? Math.round(totalReaction / reactionCount) : 0;
+    reactionEl.textContent = avgReaction > 0 ? avgReaction : '—';
+    ctx.fillStyle = 'rgba(6,6,14,0.82)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#F0F0FF'; ctx.font = 'bold 32px Space Grotesk,sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(`🏆 ${score} bodů`, W / 2, H / 2 - 24);
+    ctx.font = '18px Inter,sans-serif'; ctx.fillStyle = '#A0A0C0';
+    ctx.fillText(avgReaction > 0 ? `Průměrná reakce: ${avgReaction}ms` : 'Dobře odehráno!', W / 2, H / 2 + 18);
+    ctx.font = '14px Inter,sans-serif'; ctx.fillStyle = '#606080';
+    ctx.fillText('Zaregistruj se a sleduj svůj progres →', W / 2, H / 2 + 52);
+  }
+
+  function handleHit(cx, cy) {
+    if (!running) return;
+    for (let i = targets.length - 1; i >= 0; i--) {
+      const t = targets[i];
+      if (t.hit) continue;
+      const dx = cx - t.x, dy = cy - t.y;
+      if (Math.sqrt(dx * dx + dy * dy) <= t.r + 8) {
+        const reaction = Math.round(performance.now() - t.born);
+        totalReaction += reaction; reactionCount++;
+        reactionEl.textContent = Math.round(totalReaction / reactionCount);
+        t.hit = true; t.scale = 1.3;
+        score += t.color.points * combo;
+        scoreEl.textContent = score.toLocaleString('cs-CZ');
+        combo = Math.min(8, combo + 1);
+        comboFill.style.width = Math.min(100, (combo / 8) * 100) + '%';
+        comboVal.textContent = `x${combo}`;
+        spawnTarget();
+        return;
+      }
+    }
+    combo = 1; comboFill.style.width = '0%'; comboVal.textContent = 'x1';
+  }
+
+  function getCanvasPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W / rect.width, scaleY = H / rect.height;
+    if (e.touches) {
+      return { x: (e.touches[0].clientX - rect.left) * scaleX, y: (e.touches[0].clientY - rect.top) * scaleY };
+    }
+    return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+  }
+
+  canvas.addEventListener('click', e => { const p = getCanvasPos(e); handleHit(p.x, p.y); });
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); const p = getCanvasPos(e); handleHit(p.x, p.y); }, { passive: false });
+  startBtn.addEventListener('click', startGame);
+  requestAnimationFrame(gameLoop);
+})();
+
+/* ── HERO PLAY BTN ────────────────────────────────── */
+document.getElementById('heroPlayBtn').addEventListener('click', function() {
+  this.textContent = '⏸';
+  this.style.background = 'linear-gradient(135deg,#22DD88,#008844)';
+  setTimeout(() => { this.textContent = '▶'; this.style.background = ''; }, 4000);
+});
+</script>
+</body>
+</html>
