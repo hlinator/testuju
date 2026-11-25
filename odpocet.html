@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b2545">
 <title>Odpočet do Finska ✈️</title>
-<style>
+<style id="css">
   :root {
     --bg: #0b2545;
     --bg2: #13315c;
@@ -94,6 +94,7 @@
   .final-msg.show { display: block; }
 
   footer { text-align: center; margin-top: 30px; }
+  .status { color: #8fa3c0; font-size: .8rem; min-height: 1.2em; margin-bottom: 6px; }
   .reset { background: none; border: 0; color: #8fa3c0; text-decoration: underline; cursor: pointer; font-size: .8rem; }
 
   @media (max-width: 420px) {
@@ -107,7 +108,7 @@
 </head>
 <body>
 <div class="snow" id="snow"></div>
-<main>
+<main id="root">
   <header>
     <h1>✈️ Do Finska za ní 🇫🇮</h1>
     <p class="sub">Odlet 27. prosince 2026</p>
@@ -127,11 +128,13 @@
   </div>
 
   <footer>
+    <div class="status" id="status"></div>
     <button class="reset" id="reset">Vymazat odškrtnutí</button>
   </footer>
 </main>
 
-<script>
+<script type="application/json" id="state">[]</script>
+<script id="app">
   // ---- Nastavení ----
   const START = new Date(2026, 10, 25); // 25. 11. 2026 (měsíce od 0)
   const TARGET = new Date(2026, 11, 27); // 27. 12. 2026
@@ -151,8 +154,51 @@
     return "dní";
   }
 
-  let checked = new Set(JSON.parse(localStorage.getItem(KEY) || "[]"));
-  const save = () => localStorage.setItem(KEY, JSON.stringify([...checked]));
+  // ---- Ukládání ----
+  // Stav je uložený přímo v dokumentu (#state). Na claude.ai se po každé změně
+  // stránka znovu publikuje, takže odškrtnutí vidíš na všech zařízeních.
+  // Mimo claude.ai se použije localStorage prohlížeče.
+  const ROOT_HTML = document.getElementById("root").outerHTML; // čistá kopie před vykreslením
+  const CSS = document.getElementById("css").textContent;
+  const APP = document.getElementById("app").textContent;
+
+  let embedded = [];
+  try { embedded = JSON.parse(document.getElementById("state").textContent || "[]"); } catch (e) {}
+  let local = [];
+  try { local = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) {}
+  let checked = new Set([...embedded, ...local]);
+
+  let artifact = null;
+  let publishTimer = null;
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("artifact").then(a => { artifact = a; render(); }).catch(() => {});
+  }
+
+  function buildDocument() {
+    const json = JSON.stringify([...checked].sort()).replace(/</g, "\\u003c");
+    return "<!DOCTYPE html>\n<html lang=\"cs\">\n<head>\n<meta charset=\"UTF-8\">\n" +
+      "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+      "<meta name=\"theme-color\" content=\"#0b2545\">\n" +
+      "<title>" + document.title.replace(/</g, "&lt;") + "</title>\n" +
+      "<style id=\"css\">" + CSS + "</style>\n</head>\n<body>\n" +
+      "<div class=\"snow\" id=\"snow\"></div>\n" + ROOT_HTML + "\n" +
+      "<script type=\"application/json\" id=\"state\">" + json + "<\/script>\n" +
+      "<script id=\"app\">" + APP + "<\/script>\n</body>\n</html>\n";
+  }
+
+  function setStatus(t) { const e = document.getElementById("status"); if (e) e.textContent = t; }
+
+  const save = () => {
+    try { localStorage.setItem(KEY, JSON.stringify([...checked])); } catch (e) {}
+    if (!artifact) return;
+    setStatus("Ukládám…");
+    clearTimeout(publishTimer);
+    publishTimer = setTimeout(() => {
+      artifact.publish(buildDocument())
+        .then(() => setStatus("Uloženo ✓"))
+        .catch(err => setStatus("Uloženo jen v tomto prohlížeči"));
+    }, 700);
+  };
 
   // Všechny dny od START do TARGET
   const days = [];
@@ -268,8 +314,13 @@
   };
 
   document.getElementById("reset").onclick = () => {
-    if (confirm("Opravdu vymazat všechna odškrtnutí?")) {
+    const b = document.getElementById("reset");
+    if (b.dataset.armed) {
       checked.clear(); save(); render();
+      delete b.dataset.armed; b.textContent = "Vymazat odškrtnutí";
+    } else {
+      b.dataset.armed = "1"; b.textContent = "Opravdu vymazat? Klikni znovu";
+      setTimeout(() => { delete b.dataset.armed; b.textContent = "Vymazat odškrtnutí"; }, 4000);
     }
   };
 
