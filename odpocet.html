@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b2545">
+<title>Odpočet do Finska ✈️</title>
+<style>
+  :root {
+    --bg: #0b2545;
+    --bg2: #13315c;
+    --card: #f4f7fb;
+    --ink: #0b2545;
+    --muted: #6b7a90;
+    --blue: #1f5fbf;
+    --done: #2e7d5b;
+    --today: #ffb703;
+    --red: #c8102e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: #fff;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+    overflow-x: hidden;
+  }
+  .snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .flake {
+    position: absolute; top: -10px; color: #fff; opacity: .7;
+    animation: fall linear infinite;
+  }
+  @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+  main { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 28px 16px 48px; }
+  header { text-align: center; margin-bottom: 22px; }
+  h1 { font-size: 1.5rem; margin: 0 0 6px; font-weight: 700; }
+  .sub { color: #b9c7dd; margin: 0; }
+  .big {
+    font-size: 5rem; font-weight: 800; line-height: 1; margin: 18px 0 4px;
+    font-variant-numeric: tabular-nums;
+  }
+  .big-label { color: #b9c7dd; font-size: 1.05rem; }
+
+  .progress {
+    height: 10px; background: rgba(255,255,255,.15); border-radius: 99px;
+    overflow: hidden; margin: 18px auto 6px; max-width: 420px;
+  }
+  .progress > div { height: 100%; background: #fff; border-radius: 99px; transition: width .4s; }
+  .progress-text { text-align: center; color: #b9c7dd; font-size: .9rem; }
+
+  .btn-today {
+    display: block; margin: 20px auto 26px; padding: 14px 26px;
+    font-size: 1.05rem; font-weight: 700; border: 0; border-radius: 14px;
+    background: var(--today); color: var(--ink); cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  }
+  .btn-today:disabled { background: #5e7697; color: #dfe7f2; cursor: default; box-shadow: none; }
+
+  .month { margin: 18px 0 8px; font-weight: 700; color: #dfe7f2; text-transform: capitalize; }
+  .weekdays, .grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;
+  }
+  .weekdays div { text-align: center; font-size: .75rem; color: #8fa3c0; padding-bottom: 2px; }
+  .day {
+    position: relative; aspect-ratio: 1 / 1; border-radius: 12px; border: 0;
+    background: var(--card); color: var(--ink); cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font: inherit; padding: 4px; transition: transform .1s, background .2s;
+  }
+  .day:active { transform: scale(.94); }
+  .day .num { font-size: 1.15rem; font-weight: 700; }
+  .day .left { font-size: .65rem; color: var(--muted); margin-top: 2px; }
+  .day.future { opacity: .55; cursor: not-allowed; }
+  .day.today { outline: 3px solid var(--today); outline-offset: 2px; }
+  .day.done { background: var(--done); color: #fff; }
+  .day.done .left { color: #d7f0e4; }
+  .day.done::after {
+    content: "✓"; position: absolute; top: 3px; right: 6px; font-size: .85rem; font-weight: 800;
+  }
+  .day.missed { background: #e9d7d9; }
+  .day.final { background: linear-gradient(135deg, #fff 0 40%, #003580 40% 60%, #fff 60%); }
+  .day.final .num { background: rgba(255,255,255,.9); border-radius: 6px; padding: 0 4px; }
+  .day.final .left { background: rgba(255,255,255,.9); border-radius: 4px; padding: 0 3px; color: var(--ink); }
+  .day.final.done { background: var(--done); }
+  .day.final.done .num, .day.final.done .left { background: none; color: #fff; }
+  .empty { aspect-ratio: 1 / 1; }
+
+  .final-msg {
+    display: none; text-align: center; background: rgba(255,255,255,.1);
+    border-radius: 16px; padding: 20px; margin-top: 26px; font-size: 1.2rem;
+  }
+  .final-msg.show { display: block; }
+
+  footer { text-align: center; margin-top: 30px; }
+  .reset { background: none; border: 0; color: #8fa3c0; text-decoration: underline; cursor: pointer; font-size: .8rem; }
+
+  @media (max-width: 420px) {
+    .big { font-size: 4rem; }
+    .weekdays, .grid { gap: 5px; }
+    .day { border-radius: 9px; }
+    .day .num { font-size: 1rem; }
+    .day .left { font-size: .55rem; }
+  }
+</style>
+</head>
+<body>
+<div class="snow" id="snow"></div>
+<main>
+  <header>
+    <h1>✈️ Do Finska za ní 🇫🇮</h1>
+    <p class="sub">Odlet 27. prosince 2026</p>
+    <div class="big" id="bigCount">–</div>
+    <div class="big-label" id="bigLabel">dní do odletu</div>
+    <div class="progress"><div id="bar" style="width:0%"></div></div>
+    <div class="progress-text" id="progressText"></div>
+  </header>
+
+  <button class="btn-today" id="btnToday">Odškrtnout dnešek</button>
+
+  <div id="calendar"></div>
+
+  <div class="final-msg" id="finalMsg">
+    🎉 Je to tady! Šťastnou cestu a užijte si to spolu. ❤️<br>
+    <small>Hyvää matkaa!</small>
+  </div>
+
+  <footer>
+    <button class="reset" id="reset">Vymazat odškrtnutí</button>
+  </footer>
+</main>
+
+<script>
+  // ---- Nastavení ----
+  const START = new Date(2026, 10, 25); // 25. 11. 2026 (měsíce od 0)
+  const TARGET = new Date(2026, 11, 27); // 27. 12. 2026
+  const KEY = "odpocet-finsko-2026";
+
+  const MONTHS = ["leden","únor","březen","duben","květen","červen","červenec","srpen","září","říjen","listopad","prosinec"];
+  const WEEKDAYS = ["Po","Út","St","Čt","Pá","So","Ne"];
+  const DAY = 24 * 60 * 60 * 1000;
+
+  const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  const midnight = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diffDays = (a, b) => Math.round((midnight(b) - midnight(a)) / DAY);
+
+  function dniWord(n) {
+    if (n === 1) return "den";
+    if (n >= 2 && n <= 4) return "dny";
+    return "dní";
+  }
+
+  let checked = new Set(JSON.parse(localStorage.getItem(KEY) || "[]"));
+  const save = () => localStorage.setItem(KEY, JSON.stringify([...checked]));
+
+  // Všechny dny od START do TARGET
+  const days = [];
+  for (let d = new Date(START); d <= TARGET; d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)) {
+    days.push(d);
+  }
+
+  function render() {
+    const today = midnight(new Date());
+    const todayKey = iso(today);
+    const cal = document.getElementById("calendar");
+    cal.innerHTML = "";
+
+    // Seskupit podle měsíce
+    const byMonth = {};
+    days.forEach(d => {
+      const k = d.getFullYear() + "-" + d.getMonth();
+      (byMonth[k] = byMonth[k] || []).push(d);
+    });
+
+    Object.values(byMonth).forEach(list => {
+      const first = list[0];
+      const title = document.createElement("div");
+      title.className = "month";
+      title.textContent = `${MONTHS[first.getMonth()]} ${first.getFullYear()}`;
+      cal.appendChild(title);
+
+      const wd = document.createElement("div");
+      wd.className = "weekdays";
+      WEEKDAYS.forEach(w => { const e = document.createElement("div"); e.textContent = w; wd.appendChild(e); });
+      cal.appendChild(wd);
+
+      const grid = document.createElement("div");
+      grid.className = "grid";
+      const offset = (first.getDay() + 6) % 7; // pondělí = 0
+      for (let i = 0; i < offset; i++) {
+        const e = document.createElement("div"); e.className = "empty"; grid.appendChild(e);
+      }
+
+      list.forEach(d => {
+        const key = iso(d);
+        const left = diffDays(d, TARGET);
+        const btn = document.createElement("button");
+        btn.className = "day";
+        const isFuture = d > today;
+        const isFinal = left === 0;
+        if (isFinal) btn.classList.add("final");
+        if (isFuture) btn.classList.add("future");
+        if (key === todayKey) btn.classList.add("today");
+        if (checked.has(key)) btn.classList.add("done");
+        else if (d < today) btn.classList.add("missed");
+
+        btn.innerHTML = `<span class="num">${d.getDate()}.</span>
+          <span class="left">${isFinal ? "✈️ odlet" : left + " " + dniWord(left)}</span>`;
+        btn.title = isFuture ? "Tento den si odškrtneš, až přijde 😉" : "Klikni pro odškrtnutí";
+        btn.onclick = () => {
+          if (isFuture) { wiggle(btn); return; }
+          checked.has(key) ? checked.delete(key) : checked.add(key);
+          save();
+          render();
+        };
+        grid.appendChild(btn);
+      });
+      cal.appendChild(grid);
+    });
+
+    // Velké číslo — dny do odletu
+    const remaining = Math.max(0, diffDays(today, TARGET));
+    const big = document.getElementById("bigCount");
+    const label = document.getElementById("bigLabel");
+    if (remaining === 0) {
+      big.textContent = "✈️";
+      label.textContent = today > TARGET ? "Už jsi ve Finsku ❤️" : "Dnes letíš!";
+    } else {
+      big.textContent = remaining;
+      label.textContent = `${dniWord(remaining)} do odletu`;
+    }
+
+    // Progress
+    const total = days.length;
+    const done = days.filter(d => checked.has(iso(d))).length;
+    document.getElementById("bar").style.width = (done / total * 100) + "%";
+    document.getElementById("progressText").textContent = `Odškrtnuto ${done} z ${total}`;
+
+    // Tlačítko dneška
+    const btnToday = document.getElementById("btnToday");
+    const inRange = today >= START && today <= TARGET;
+    if (!inRange) {
+      btnToday.disabled = true;
+      btnToday.textContent = today < START ? "Odpočet ještě nezačal" : "Hotovo 🎉";
+    } else if (checked.has(todayKey)) {
+      btnToday.disabled = true;
+      btnToday.textContent = "Dnešek odškrtnutý ✓";
+    } else {
+      btnToday.disabled = false;
+      btnToday.textContent = remaining === 0 ? "Odškrtnout den odletu ✈️" : "Odškrtnout dnešek";
+    }
+
+    document.getElementById("finalMsg").classList.toggle("show", checked.has(iso(TARGET)));
+  }
+
+  function wiggle(el) {
+    el.animate(
+      [{ transform: "translateX(0)" }, { transform: "translateX(-4px)" }, { transform: "translateX(4px)" }, { transform: "translateX(0)" }],
+      { duration: 250 }
+    );
+  }
+
+  document.getElementById("btnToday").onclick = () => {
+    checked.add(iso(midnight(new Date())));
+    save();
+    render();
+  };
+
+  document.getElementById("reset").onclick = () => {
+    if (confirm("Opravdu vymazat všechna odškrtnutí?")) {
+      checked.clear(); save(); render();
+    }
+  };
+
+  // Sníh ❄
+  const snow = document.getElementById("snow");
+  for (let i = 0; i < 30; i++) {
+    const f = document.createElement("div");
+    f.className = "flake";
+    f.textContent = "❄";
+    f.style.left = Math.random() * 100 + "vw";
+    f.style.fontSize = (8 + Math.random() * 12) + "px";
+    f.style.animationDuration = (8 + Math.random() * 12) + "s";
+    f.style.animationDelay = (-Math.random() * 20) + "s";
+    snow.appendChild(f);
+  }
+
+  render();
+  // Překreslit po půlnoci, když je stránka otevřená
+  setInterval(render, 60 * 1000);
+</script>
+</body>
+</html>
