@@ -81,6 +81,10 @@ window.VZKAZY = {
     ],
   },
 
+  // Odkud se fotky načítají (z GitHubu, takže nová fotka se ukáže hned po nahrání,
+  // bez nového nasazení na Vercel). Nech být, pokud nevíš, co to dělá.
+  zdrojFotek: "https://raw.githubusercontent.com/hlinator/testuju/refs/heads/claude/gracious-heisenberg-8rc5pu/odpocet-dva/",
+
   // Fotky — názvy souborů ve složce fotky/ (např. "fotky/spolu-praha.jpg")
   fotky: [
     "fotky/foto-01.jpg",

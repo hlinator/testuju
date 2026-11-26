@@ -244,7 +244,20 @@
 
 <script src="vzkazy.js"></script>
 <script>
-{
+(async () => {
+  // Nejnovější vzkazy z GitHubu (úpravy se projeví bez nového nasazení); jinak záložní vzkazy.js
+  const REMOTE = "https://raw.githubusercontent.com/hlinator/testuju/refs/heads/claude/gracious-heisenberg-8rc5pu/odpocet-dva/vzkazy.js";
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 4000);
+    const r = await fetch(REMOTE, { cache: "no-store", signal: ctrl.signal });
+    clearTimeout(t);
+    if (r.ok) {
+      const backup = window.VZKAZY;
+      try { new Function(await r.text())(); } catch (e) { window.VZKAZY = backup; }
+      if (!window.VZKAZY || !window.VZKAZY.proNi) window.VZKAZY = backup;
+    }
+  } catch (e) {}
   const V = window.VZKAZY || {};
   const NAMES = V.jmena || { on: "Ondra", ona: "Mája" };
   const OSLO = { ona: V.osloveniOna || ["Myško"], on: V.osloveniOn || ["Myšku"] };
@@ -347,7 +360,7 @@
       const img = new Image();
       img.alt = "Naše fotka";
       img.onerror = () => { el.textContent = pick(EMOJI); };
-      img.src = src;
+      img.src = (V.zdrojFotek || "") + src;
       el.appendChild(img);
     } else el.textContent = pick(EMOJI);
   }
@@ -618,7 +631,7 @@
     if (demo === "milnik") { fireworks("milestone"); heartRain(40); setTimeout(() => showPhoto(fill(MILNIKY[7], "ona", 7), true), 1400); }
     if (demo === "finale") finale();
   });
-}
+})();
 </script>
 </body>
 </html>
