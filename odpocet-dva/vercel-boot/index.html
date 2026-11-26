@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a1633">
+<title>Ondra ✈️ Mája</title>
+<style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0a1633;color:#ffd6e0;font:600 1.2rem system-ui,sans-serif}</style>
+</head>
+<body>
+<p id="m">Načítám… ♥️</p>
+<script>
+// Aplikace se načítá z GitHubu (odpocet-dva/index.html), takže úpravy na GitHubu jsou hned živé.
+fetch("https://raw.githubusercontent.com/hlinator/testuju/refs/heads/claude/gracious-heisenberg-8rc5pu/odpocet-dva/index.html", { cache: "no-store" })
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+  .then(t => { document.open(); document.write(t); document.close(); })
+  .catch(() => { document.getElementById("m").textContent = "Nepodařilo se načíst — zkus obnovit stránku ♥️"; });
+</script>
+</body>
+</html>
