@@ -3,165 +3,285 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b2545">
-<title>Odpočet do Finska ✈️</title>
+<meta name="theme-color" content="#0a1633">
+<title>Ondra ✈️ Mája</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0b2545; --bg2: #13315c; --card: #f4f7fb; --ink: #0b2545; --muted: #6b7a90;
-    --a: #ffb703;   /* on */
-    --b: #8ecae6;   /* ona */
-    --heart: #e5383b;
+    --night: #0a1633; --night2: #1a1446; --card: #fdf6f0; --ink: #2a1f3d;
+    --a: #ffb703;   /* Ondra */
+    --b: #ff8fab;   /* Mája */
+    --heart: #ff3b6b; --aur1: #3ddc97; --aur2: #9b5de5;
   }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; min-width: 0; }
+  html, body { overflow-x: clip; }
   body {
-    margin: 0; min-height: 100vh; color: #fff; overflow-x: hidden;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+    margin: 0; min-height: 100vh; color: #fff;
+    font: 16px/1.5 "Nunito", system-ui, sans-serif;
+    background: linear-gradient(180deg, var(--night) 0%, var(--night2) 70%, #2b1650 100%);
   }
+  /* Polární záře */
+  .aurora { position: fixed; inset: 0 0 auto 0; height: 60vh; pointer-events: none; z-index: 0; overflow: hidden; }
+  .aurora::before, .aurora::after {
+    content: ""; position: absolute; left: -20%; width: 140%; height: 70%; border-radius: 50%;
+    filter: blur(50px); opacity: .35; animation: sway 14s ease-in-out infinite alternate;
+  }
+  .aurora::before { top: -10%; background: radial-gradient(ellipse at center, var(--aur1), transparent 65%); }
+  .aurora::after { top: 10%; background: radial-gradient(ellipse at center, var(--aur2), transparent 60%); animation-delay: -7s; }
+  @keyframes sway { from { transform: translateX(-8%) skewX(-8deg); } to { transform: translateX(8%) skewX(8deg); } }
   .snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-  .flake { position: absolute; top: -10px; color: #fff; opacity: .5; animation: fall linear infinite; }
+  .flake { position: absolute; top: -20px; opacity: .55; animation: fall linear infinite; }
   @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
-  @media (prefers-reduced-motion: reduce) { .flake { display: none; } }
 
-  main { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 26px 16px 48px; }
+  main { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 26px 16px 60px; }
   header { text-align: center; }
-  h1 { font-size: 1.5rem; margin: 0 0 6px; }
-  .sub { color: #b9c7dd; margin: 0; }
-  .hello { margin: 10px 0 0; font-weight: 600; min-height: 1.3em; }
-  .big { font-size: 5rem; font-weight: 800; line-height: 1; margin: 16px 0 4px; font-variant-numeric: tabular-nums; }
-  .big-label { color: #b9c7dd; font-size: 1.05rem; }
+  .couple { font-family: "Caveat", cursive; font-size: clamp(2.2rem, 8vw, 3rem); line-height: 1.05; margin: 0; font-weight: 700; }
+  .couple .plane { display: inline-block; animation: fly 3s ease-in-out infinite; }
+  @keyframes fly { 50% { transform: translate(4px, -6px) rotate(6deg); } }
+  .sub { color: #cfc6ec; margin: 4px 0 0; }
+  .hello { font-family: "Caveat", cursive; font-size: 1.9rem; margin: 14px 0 0; min-height: 1.2em; color: #ffd6e0; }
+  .big { font-size: clamp(4rem, 18vw, 5.5rem); font-weight: 800; line-height: 1; margin: 10px 0 2px; font-variant-numeric: tabular-nums; }
+  .big-label { color: #e4dcff; font-size: 1.1rem; }
 
-  .people { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 22px 0 6px; }
-  .person {
-    background: rgba(255,255,255,.08); border-radius: 14px; padding: 12px 14px;
-    border: 2px solid transparent;
-  }
-  .person.me { border-color: rgba(255,255,255,.35); }
-  .person .name { font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .people { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; margin: 22px 0 6px; }
+  .person { background: rgba(255,255,255,.08); border-radius: 16px; padding: 12px 14px; border: 2px solid transparent; }
+  .person.me { border-color: rgba(255,255,255,.4); }
+  .person .name { font-weight: 800; display: flex; align-items: center; gap: 8px; }
   .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex: none; }
-  .person .today-state { font-size: .85rem; color: #dfe7f2; margin-top: 4px; }
+  .person .today-state { font-size: .85rem; color: #ece6ff; margin-top: 4px; }
   .bar { height: 8px; background: rgba(255,255,255,.15); border-radius: 99px; overflow: hidden; margin-top: 8px; }
-  .bar > div { height: 100%; border-radius: 99px; transition: width .4s; }
-  .person .count { font-size: .78rem; color: #b9c7dd; margin-top: 4px; }
+  .bar > div { height: 100%; border-radius: 99px; transition: width .6s; }
+  .person .count { font-size: .78rem; color: #cfc6ec; margin-top: 4px; }
 
-  .btn-today {
-    display: block; margin: 18px auto 8px; padding: 15px 28px; min-height: 48px;
-    font-size: 1.05rem; font-weight: 700; border: 0; border-radius: 14px;
-    color: var(--ink); cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  .btn {
+    display: block; margin: 18px auto 6px; padding: 15px 30px; min-height: 50px;
+    font: 800 1.05rem "Nunito", sans-serif; border: 0; border-radius: 99px;
+    color: var(--ink); cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,.3);
+    transition: transform .15s;
   }
-  .btn-today:disabled { background: #5e7697 !important; color: #dfe7f2; cursor: default; box-shadow: none; }
-  .btn-today:focus-visible, .day:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
-  .notice { text-align: center; color: #b9c7dd; font-size: .9rem; margin: 6px 0 0; min-height: 1.2em; }
-  .notice.err { color: #ffadad; }
+  .btn:hover:not(:disabled) { transform: translateY(-2px); }
+  .btn:disabled { background: #5d5683 !important; color: #e4dcff; cursor: default; box-shadow: none; }
+  .btn:focus-visible, .day:focus-visible, .link:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+  .link { display: block; margin: 4px auto; background: none; border: 0; color: #ffd6e0; font: 600 .95rem "Nunito"; cursor: pointer; padding: 10px; text-decoration: underline; text-underline-offset: 3px; }
+  .notice { text-align: center; color: #cfc6ec; font-size: .9rem; margin: 4px 0 0; min-height: 1.2em; }
+  .notice.err { color: #ffb3c1; }
 
-  .legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; font-size: .78rem; color: #b9c7dd; margin: 18px 0 0; }
+  .daily {
+    margin: 18px auto 0; max-width: 520px; background: var(--card); color: var(--ink);
+    border-radius: 6px; padding: 16px 20px 14px; transform: rotate(-1.2deg);
+    box-shadow: 0 10px 30px rgba(0,0,0,.35); position: relative;
+  }
+  .daily::before { content: ""; position: absolute; top: -10px; left: 50%; width: 90px; height: 22px; margin-left: -45px; background: rgba(255,143,171,.65); transform: rotate(2deg); }
+  .daily .lbl { font-size: .75rem; color: #8a7d9e; }
+  .daily .txt { font-family: "Caveat", cursive; font-size: 1.65rem; line-height: 1.2; margin-top: 2px; }
+
+  .legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; font-size: .8rem; color: #cfc6ec; margin: 26px 0 0; }
   .legend span { display: inline-flex; align-items: center; gap: 6px; }
 
-  .month { margin: 18px 0 8px; font-weight: 700; color: #dfe7f2; text-transform: capitalize; }
+  .month { margin: 18px 0 8px; font-weight: 800; color: #ece6ff; text-transform: capitalize; }
   .weekdays, .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
-  .weekdays div { text-align: center; font-size: .75rem; color: #8fa3c0; }
+  .weekdays div { text-align: center; font-size: .75rem; color: #a79fcc; }
   .day {
-    position: relative; aspect-ratio: 1 / 1; border-radius: 12px; border: 0; overflow: hidden;
+    position: relative; aspect-ratio: 1 / 1; border-radius: 14px; border: 0; overflow: hidden;
     background: var(--card); color: var(--ink); cursor: pointer; font: inherit; padding: 0;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    transition: transform .1s;
+    transition: transform .12s;
   }
-  .day:active { transform: scale(.94); }
-  .day .half { position: absolute; top: 0; bottom: 0; width: 50%; opacity: 0; transition: opacity .2s; }
+  .day:active { transform: scale(.92); }
+  .day .half { position: absolute; top: 0; bottom: 0; width: 50%; opacity: 0; transition: opacity .3s; }
   .day .half.l { left: 0; background: var(--a); }
   .day .half.r { right: 0; background: var(--b); }
   .day.a .half.l, .day.b .half.r { opacity: 1; }
   .day .num, .day .left { position: relative; }
-  .day .num { font-size: 1.15rem; font-weight: 700; }
-  .day .left { font-size: .65rem; color: #33445c; margin-top: 2px; }
-  .day.both::after { content: "❤"; position: absolute; top: 2px; right: 5px; color: var(--heart); font-size: .8rem; }
+  .day .num { font-size: 1.15rem; font-weight: 800; }
+  .day .left { font-size: .65rem; color: #4a3d5e; margin-top: 2px; }
+  .day.both::after { content: "♥"; position: absolute; top: 1px; right: 5px; color: var(--heart); font-size: .95rem; }
+  .day.mile::before { content: "★"; position: absolute; top: 1px; left: 5px; color: #b07d00; font-size: .7rem; }
   .day.future { opacity: .5; cursor: not-allowed; }
   .day.today { outline: 3px solid #fff; outline-offset: 2px; }
   .day.readonly { cursor: default; }
   .day.final:not(.a):not(.b) { background: linear-gradient(135deg, #fff 0 40%, #003580 40% 60%, #fff 60%); }
   .day.final .num, .day.final .left { background: rgba(255,255,255,.85); border-radius: 5px; padding: 0 4px; }
   .empty { aspect-ratio: 1 / 1; }
+  .pop-day { animation: popday .6s ease; }
+  @keyframes popday { 40% { transform: scale(1.2) rotate(-4deg); } }
 
-  .final-msg { display: none; text-align: center; background: rgba(255,255,255,.1); border-radius: 16px; padding: 20px; margin-top: 26px; font-size: 1.2rem; }
-  .final-msg.show { display: block; }
+  footer { text-align: center; margin-top: 34px; font-family: "Caveat", cursive; font-size: 1.5rem; color: #ffd6e0; }
+
+  /* Ohňostroj */
+  #fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 80; }
+  .heart-rain { position: fixed; top: -40px; z-index: 81; pointer-events: none; animation: rain linear forwards; }
+  @keyframes rain { to { transform: translateY(115vh) rotate(var(--r)); opacity: .2; } }
+
+  /* Fotka po odškrtnutí */
+  .overlay {
+    position: fixed; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center;
+    background: rgba(10, 8, 30, .72); backdrop-filter: blur(4px); padding: 20px;
+    opacity: 0; pointer-events: none; transition: opacity .35s;
+  }
+  .overlay.show { opacity: 1; pointer-events: auto; }
+  .polaroid {
+    background: #fff; color: var(--ink); padding: 14px 14px 16px; border-radius: 4px;
+    width: min(360px, 88vw); box-shadow: 0 20px 60px rgba(0,0,0,.5); text-align: center; position: relative;
+    transform: scale(.2) rotate(-25deg) translateY(80px); opacity: 0;
+  }
+  .overlay.show .polaroid { animation: flyin .9s cubic-bezier(.2,1.4,.4,1) .15s forwards; }
+  @keyframes flyin { to { transform: scale(1) rotate(-2.5deg) translateY(0); opacity: 1; } }
+  .photo { width: 100%; aspect-ratio: 4 / 5; background: linear-gradient(135deg, #ffe0ea, #e5dcff); display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 7rem; }
+  .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .polaroid .note { font-family: "Caveat", cursive; font-size: 1.8rem; line-height: 1.15; margin: 12px 4px 10px; }
+  .polaroid .btn { margin: 6px auto 0; background: var(--b); font-size: 1rem; padding: 12px 24px; }
+  .badge {
+    position: absolute; top: -16px; right: -10px; background: var(--heart); color: #fff; font-weight: 800;
+    padding: 6px 14px; border-radius: 99px; transform: rotate(8deg); box-shadow: 0 6px 16px rgba(0,0,0,.3); display: none;
+  }
+  .badge.show { display: block; animation: wob 1s ease-in-out infinite alternate; }
+  @keyframes wob { to { transform: rotate(-6deg) scale(1.08); } }
+
+  /* Velké finále */
+  #finale { flex-direction: column; justify-content: flex-start; overflow: hidden; background: radial-gradient(ellipse at center, rgba(60,20,90,.88), rgba(8,6,25,.95)); }
+  .fin-head { position: relative; z-index: 3; text-align: center; margin-top: 6vh; }
+  .fin-title { font-family: "Caveat", cursive; font-size: clamp(3rem, 13vw, 5.5rem); line-height: 1; margin: 0; color: #fff; text-shadow: 0 0 30px var(--heart); animation: beat 1.2s ease-in-out infinite; }
+  @keyframes beat { 15% { transform: scale(1.08); } 30% { transform: scale(1); } 45% { transform: scale(1.05); } }
+  .fin-text { font-size: 1.15rem; max-width: 540px; margin: 12px auto 0; color: #ffe3ea; text-shadow: 0 2px 8px #000; }
+  .fin-stage { position: absolute; inset: 0; z-index: 2; }
+  .mini {
+    position: absolute; width: clamp(120px, 30vw, 190px); background: #fff; padding: 8px 8px 10px; border-radius: 3px;
+    box-shadow: 0 14px 40px rgba(0,0,0,.5); color: var(--ink); text-align: center;
+    animation: drop .8s cubic-bezier(.2,1.5,.4,1) forwards; opacity: 0;
+  }
+  .mini .photo { font-size: 3.5rem; aspect-ratio: 1 / 1; }
+  .mini .cap { font-family: "Caveat", cursive; font-size: 1.15rem; line-height: 1.1; margin-top: 6px; }
+  @keyframes drop { from { transform: translateY(-60vh) rotate(0) scale(.5); opacity: 0; } to { transform: translateY(0) rotate(var(--rot)) scale(1); opacity: 1; } }
+  .fin-close { position: absolute; bottom: 4vh; left: 50%; transform: translateX(-50%); z-index: 4; background: var(--b); }
+
+  .hidden { display: none !important; }
 
   @media (max-width: 420px) {
-    .big { font-size: 4rem; }
     .weekdays, .grid { gap: 5px; }
-    .day { border-radius: 9px; }
+    .day { border-radius: 10px; }
     .day .num { font-size: 1rem; }
     .day .left { font-size: .55rem; }
     .person { padding: 10px; }
   }
+  @media (prefers-reduced-motion: reduce) {
+    .flake, .aurora::before, .aurora::after, .couple .plane, .fin-title, .badge.show { animation: none !important; }
+  }
 </style>
 </head>
 <body>
+<div class="aurora"></div>
 <div class="snow" id="snow"></div>
+<canvas id="fx"></canvas>
+
 <main>
   <header>
-    <h1>✈️ Odpočet do Finska 🇫🇮</h1>
-    <p class="sub">Odlet 27. prosince 2026</p>
+    <h1 class="couple"><span id="nmOn">Ondra</span> <span class="plane">✈️</span> <span id="nmOna">Mája</span></h1>
+    <p class="sub">Odlet do Finska 27. prosince 2026 🇫🇮</p>
     <p class="hello" id="hello"></p>
     <div class="big" id="bigCount">–</div>
-    <div class="big-label" id="bigLabel">dní do odletu</div>
+    <div class="big-label" id="bigLabel">dní, než se obejmeme</div>
   </header>
 
   <section class="people">
     <div class="person" id="p-on">
-      <div class="name"><span class="dot" style="background:var(--a)"></span><span class="nm">On</span></div>
+      <div class="name"><span class="dot" style="background:var(--a)"></span><span class="nm">Ondra</span></div>
       <div class="today-state"></div>
       <div class="bar"><div style="background:var(--a);width:0"></div></div>
       <div class="count"></div>
     </div>
     <div class="person" id="p-ona">
-      <div class="name"><span class="dot" style="background:var(--b)"></span><span class="nm">Ona</span></div>
+      <div class="name"><span class="dot" style="background:var(--b)"></span><span class="nm">Mája</span></div>
       <div class="today-state"></div>
       <div class="bar"><div style="background:var(--b);width:0"></div></div>
       <div class="count"></div>
     </div>
   </section>
 
-  <button class="btn-today" id="btnToday" disabled>Načítám…</button>
+  <button class="btn" id="btnToday" disabled>Načítám…</button>
   <p class="notice" id="notice"></p>
+  <button class="link hidden" id="btnFinale">🎆 Spustit oslavu znovu</button>
+
+  <div class="daily">
+    <div class="lbl">Dnešní vzkaz 💌</div>
+    <div class="txt" id="dailyTxt">…</div>
+  </div>
+  <button class="link" id="btnPhoto">📸 Ukaž mi nějakou naši fotku</button>
 
   <div class="legend">
-    <span><span class="dot" style="background:var(--a)"></span><span id="lg-on">On</span></span>
-    <span><span class="dot" style="background:var(--b)"></span><span id="lg-ona">Ona</span></span>
-    <span><span style="color:var(--heart)">❤</span> oba</span>
+    <span><span class="dot" style="background:var(--a)"></span><span id="lg-on">Ondra</span></span>
+    <span><span class="dot" style="background:var(--b)"></span><span id="lg-ona">Mája</span></span>
+    <span><span style="color:var(--heart)">♥</span> oba</span>
+    <span><span style="color:#ffd166">★</span> milník</span>
   </div>
 
   <div id="calendar"></div>
 
-  <div class="final-msg" id="finalMsg">
-    🎉 Je to tady! Konečně spolu. ❤️<br><small>Hyvää matkaa!</small>
-  </div>
+  <footer>Miluju tě 🐭🧩♥️🐣🐻</footer>
 </main>
 
+<!-- Fotka s vzkazem -->
+<div class="overlay" id="pop" role="dialog" aria-modal="true" aria-labelledby="popNote">
+  <div class="polaroid">
+    <div class="badge" id="popBadge">★ Milník!</div>
+    <div class="photo" id="popPhoto"></div>
+    <p class="note" id="popNote"></p>
+    <button class="btn" id="popClose">Taky tě miluju ♥️</button>
+  </div>
+</div>
+
+<!-- Velké finále -->
+<div class="overlay" id="finale" role="dialog" aria-modal="true" aria-labelledby="finTitle">
+  <div class="fin-stage" id="finStage"></div>
+  <div class="fin-head">
+    <h2 class="fin-title" id="finTitle">Dnes se vidíme! ♥️</h2>
+    <p class="fin-text" id="finText"></p>
+  </div>
+  <button class="btn fin-close" id="finClose">♥️ Jdu tě obejmout</button>
+</div>
+
+<script src="vzkazy.js"></script>
 <script>
 {
+  const V = window.VZKAZY || {};
+  const NAMES = V.jmena || { on: "Ondra", ona: "Mája" };
+  const OSLO = { ona: V.osloveniOna || ["Myško"], on: V.osloveniOn || ["Myšku"] };
+  const NOTES = { ona: V.proNi || ["Miluju tě ♥️"], on: V.proNej || ["Už jen {dny}!"] };
+  const MILNIKY = V.milniky || {};
+  const FOTKY = (V.fotky || []).filter(Boolean);
+  const SPOLECNE = (V.spolecneFotky || []).filter(Boolean);
+  const FIN = V.finale || {};
+  const EMOJI = ["🐭", "🧩", "♥️", "🐣", "🐻", "🍩"];
+
   const START = new Date(2026, 10, 25);
   const TARGET = new Date(2026, 11, 27);
   const MONTHS = ["leden","únor","březen","duben","květen","červen","červenec","srpen","září","říjen","listopad","prosinec"];
   const WEEKDAYS = ["Po","Út","St","Čt","Pá","So","Ne"];
   const DAY = 864e5;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
   const midnight = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
   const diffDays = (a, b) => Math.round((midnight(b) - midnight(a)) / DAY);
   const dniWord = n => n === 1 ? "den" : (n >= 2 && n <= 4 ? "dny" : "dní");
   const $ = id => document.getElementById(id);
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+  const seeded = (arr, seed) => arr[Math.abs(seed) % arr.length];
 
-  // Osobní klíč z odkazu (?k=...), zapamatovaný i pro příště
+  // Kdo je kdo — "me" = kdo se dívá; vzkazy se oslovují toho, kdo se dívá
+  const fill = (txt, who, left) => txt
+    .replace(/\{oslo\}/g, () => pick(OSLO[who]))
+    .replace(/\{dny\}/g, left > 0 ? `${left} ${dniWord(left)}` : "pár hodin");
+
+  // ---- Osobní klíč ----
   const params = new URLSearchParams(location.search);
   let key = params.get("k");
-  try {
-    if (key) localStorage.setItem("odpocet-k", key);
-    else key = localStorage.getItem("odpocet-k");
-  } catch (e) {}
+  try { if (key) localStorage.setItem("odpocet-k", key); else key = localStorage.getItem("odpocet-k"); } catch (e) {}
 
-  let state = { me: null, names: { on: "On", ona: "Ona" }, ticks: { on: [], ona: [] } };
-  let loaded = false;
-  let busy = false;
+  let state = { me: null, ticks: { on: [], ona: [] } };
+  let loaded = false, busy = false;
 
   const days = [];
   for (let d = new Date(START); d <= TARGET; d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)) days.push(d);
@@ -178,26 +298,21 @@
         try { localStorage.removeItem("odpocet-k"); } catch (e) {}
         notice("Tenhle osobní odkaz neznám — kalendář je jen ke čtení.", true);
       }
-    } catch (e) {
-      notice("Nepodařilo se načíst stav. Zkus obnovit stránku.", true);
-    }
+    } catch (e) { notice("Nepodařilo se načíst stav. Zkus obnovit stránku.", true); }
     render();
   }
 
   async function toggle(date, done) {
     if (!state.me || busy) return;
     busy = true;
-    // Optimistická změna
     const mine = new Set(state.ticks[state.me]);
     done ? mine.add(date) : mine.delete(date);
     state.ticks[state.me] = [...mine];
     render();
+    if (done) celebrate(date);
     notice("Ukládám…");
     try {
-      const r = await fetch("/api/state", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ k: key, date, done })
-      });
+      const r = await fetch("/api/state", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k: key, date, done }) });
       const j = await r.json();
       if (!r.ok) throw new Error(j.error || "Chyba");
       state = j;
@@ -211,48 +326,218 @@
     render();
   }
 
+  // ================= OSLAVY =================
+  function celebrate(date) {
+    const d = new Date(date + "T12:00:00");
+    const left = diffDays(d, TARGET);
+    const who = state.me || "ona";
+    const tile = document.querySelector(`.day[data-k="${date}"]`);
+    if (tile) tile.classList.add("pop-day");
+    if (left === 0) { finale(); return; }
+    const isMile = left in MILNIKY;
+    fireworks(isMile ? "milestone" : "day");
+    if (isMile) heartRain(40);
+    const note = isMile ? fill(MILNIKY[left], who, left) : fill(pick(NOTES[who]), who, left);
+    setTimeout(() => showPhoto(note, isMile), isMile ? 1400 : 900);
+  }
+
+  function setPhoto(el, src) {
+    el.innerHTML = "";
+    if (src) {
+      const img = new Image();
+      img.alt = "Naše fotka";
+      img.onerror = () => { el.textContent = pick(EMOJI); };
+      img.src = src;
+      el.appendChild(img);
+    } else el.textContent = pick(EMOJI);
+  }
+
+  function showPhoto(note, isMile) {
+    setPhoto($("popPhoto"), FOTKY.length ? pick(FOTKY) : null);
+    $("popNote").textContent = note;
+    $("popBadge").classList.toggle("show", !!isMile);
+    $("popClose").textContent = state.me === "on" ? "Těším se ♥️" : "Taky tě miluju ♥️";
+    $("pop").classList.add("show");
+    setTimeout(() => $("popClose").focus(), 400);
+  }
+  $("popClose").onclick = () => $("pop").classList.remove("show");
+  $("pop").onclick = e => { if (e.target.id === "pop") $("pop").classList.remove("show"); };
+
+  $("btnPhoto").onclick = () => {
+    const who = state.me || "ona";
+    const left = Math.max(0, diffDays(new Date(), TARGET));
+    showPhoto(fill(pick(NOTES[who]), who, left), false);
+  };
+
+  let finTimers = [];
+  function finale() {
+    const ov = $("finale"), stage = $("finStage");
+    finTimers.forEach(clearTimeout); finTimers = [];
+    stage.innerHTML = "";
+    $("finTitle").textContent = FIN.nadpis || "Dnes se vidíme! ♥️";
+    $("finText").textContent = FIN.text || "Miluju tě!";
+    ov.classList.add("show");
+    fireworks("finale");
+    heartRain(70, 12000);
+    const photos = SPOLECNE.length ? SPOLECNE : FOTKY;
+    const caps = FIN.poznamky && FIN.poznamky.length ? FIN.poznamky : ["Miluju tě ♥️"];
+    const count = Math.max(photos.length, 8);
+    const W = innerWidth, H = innerHeight;
+    for (let i = 0; i < Math.min(count, 24); i++) {
+      finTimers.push(setTimeout(() => {
+        const m = document.createElement("div");
+        m.className = "mini";
+        const ph = document.createElement("div");
+        ph.className = "photo";
+        setPhoto(ph, photos.length ? photos[i % photos.length] : null);
+        const cap = document.createElement("div");
+        cap.className = "cap";
+        cap.textContent = caps[i % caps.length];
+        m.append(ph, cap);
+        const w = Math.min(190, Math.max(120, W * .3));
+        m.style.left = Math.random() * Math.max(0, W - w - 10) + 5 + "px";
+        m.style.top = (H * .28) + Math.random() * Math.max(0, H * .5 - w) + "px";
+        m.style.setProperty("--rot", (Math.random() * 30 - 15).toFixed(1) + "deg");
+        stage.appendChild(m);
+      }, 1800 + i * 900));
+    }
+    setTimeout(() => $("finClose").focus(), 600);
+  }
+  $("finClose").onclick = () => { $("finale").classList.remove("show"); finTimers.forEach(clearTimeout); };
+  $("btnFinale").onclick = finale;
+
+  function heartRain(n, dur = 5000) {
+    const set = ["♥️", "🐭", "🧩", "🐣", "🐻", "💕", "💖"];
+    for (let i = 0; i < (reduced ? Math.min(n, 10) : n); i++) {
+      setTimeout(() => {
+        const h = document.createElement("div");
+        h.className = "heart-rain";
+        h.textContent = pick(set);
+        h.style.left = Math.random() * 100 + "vw";
+        h.style.fontSize = (18 + Math.random() * 26) + "px";
+        h.style.setProperty("--r", (Math.random() * 720 - 360) + "deg");
+        const t = 3 + Math.random() * 3;
+        h.style.animationDuration = t + "s";
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), t * 1000 + 100);
+      }, Math.random() * dur);
+    }
+  }
+
+  // ---- Ohňostroj (canvas) ----
+  const cv = $("fx"), cx = cv.getContext("2d");
+  let parts = [], rockets = [], fxOn = false, pending = 0;
+  const COLORS = ["#ff3b6b", "#ff8fab", "#ffd166", "#ffb703", "#3ddc97", "#9b5de5", "#8ecae6", "#ffffff"];
+  function sizeFx() { const r = devicePixelRatio || 1; cv.width = innerWidth * r; cv.height = innerHeight * r; cx.setTransform(r, 0, 0, r, 0, 0); }
+  addEventListener("resize", sizeFx); sizeFx();
+
+  function rocket() {
+    const W = innerWidth, H = innerHeight;
+    rockets.push({ x: W * (.15 + Math.random() * .7), y: H + 10, ty: H * (.12 + Math.random() * .35), vx: (Math.random() - .5) * 1.5, color: pick(COLORS), heart: Math.random() < .35 });
+    startFx();
+  }
+  function explode(r) {
+    const n = reduced ? 30 : 80;
+    const c2 = pick(COLORS);
+    for (let i = 0; i < n; i++) {
+      let vx, vy;
+      if (r.heart) {
+        const t = (i / n) * Math.PI * 2;
+        vx = 16 * Math.sin(t) ** 3 * .28; vy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) * .28;
+      } else {
+        const a = Math.random() * Math.PI * 2, s = 1.5 + Math.random() * 4.5;
+        vx = Math.cos(a) * s; vy = Math.sin(a) * s;
+      }
+      parts.push({ x: r.x, y: r.y, vx, vy, life: 1, decay: .010 + Math.random() * .012, color: r.heart ? "#ff3b6b" : (i % 3 ? r.color : c2) });
+    }
+  }
+  function startFx() { if (!fxOn) { fxOn = true; requestAnimationFrame(tick); } }
+  function tick() {
+    const W = innerWidth, H = innerHeight;
+    cx.globalCompositeOperation = "destination-out";
+    cx.fillStyle = "rgba(0,0,0,.22)"; cx.fillRect(0, 0, W, H);
+    cx.globalCompositeOperation = "lighter";
+    rockets = rockets.filter(r => {
+      r.y -= Math.max(4, (r.y - r.ty) * .06); r.x += r.vx;
+      cx.fillStyle = r.color; cx.beginPath(); cx.arc(r.x, r.y, 2.5, 0, 7); cx.fill();
+      if (r.y - r.ty < 6) { explode(r); return false; }
+      return true;
+    });
+    parts = parts.filter(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += .05; p.vx *= .985; p.vy *= .985; p.life -= p.decay;
+      if (p.life <= 0) return false;
+      cx.globalAlpha = p.life; cx.fillStyle = p.color;
+      cx.beginPath(); cx.arc(p.x, p.y, 2.2, 0, 7); cx.fill();
+      return true;
+    });
+    cx.globalAlpha = 1;
+    if (rockets.length || parts.length || pending > 0) requestAnimationFrame(tick);
+    else { fxOn = false; cx.clearRect(0, 0, W, H); }
+  }
+  function fireworks(level) {
+    const plan = { day: [6, 1600], milestone: [20, 4000], finale: [90, 15000] }[level];
+    const n = reduced ? Math.ceil(plan[0] / 4) : plan[0];
+    for (let i = 0; i < n; i++) {
+      pending++;
+      setTimeout(() => { pending--; rocket(); }, (i / n) * plan[1] + Math.random() * 250);
+    }
+    startFx();
+  }
+
+  // ================= VYKRESLENÍ =================
   function render() {
     const today = midnight(new Date());
     const todayKey = iso(today);
     const on = new Set(state.ticks.on), ona = new Set(state.ticks.ona);
     const me = state.me;
-    const names = state.names;
+    const remaining = Math.max(0, diffDays(today, TARGET));
 
-    // Jména
+    $("nmOn").textContent = NAMES.on; $("nmOna").textContent = NAMES.ona;
     for (const who of ["on", "ona"]) {
       const box = $("p-" + who);
-      box.querySelector(".nm").textContent = names[who] + (me === who ? " (ty)" : "");
+      box.querySelector(".nm").textContent = NAMES[who] + (me === who ? " (ty)" : "");
       box.classList.toggle("me", me === who);
       const set = who === "on" ? on : ona;
       const done = days.filter(d => set.has(iso(d))).length;
       box.querySelector(".bar > div").style.width = (done / days.length * 100) + "%";
       box.querySelector(".count").textContent = `Odškrtnuto ${done} z ${days.length}`;
       box.querySelector(".today-state").textContent = !loaded ? "…" : (set.has(todayKey) ? "Dnešek odškrtnutý ✓" : "Dnešek ještě ne");
-      $("lg-" + who).textContent = names[who];
+      $("lg-" + who).textContent = NAMES[who];
     }
-    $("hello").textContent = me ? `Ahoj, ${names[me]}! 👋` : (loaded ? "Jen prohlížení — pro odškrtávání otevři svůj osobní odkaz." : "");
 
-    // Velké číslo
-    const remaining = Math.max(0, diffDays(today, TARGET));
+    // Pozdrav: oslovení se mění podle dne
+    const seed = today.getDate() + today.getMonth() * 31;
+    if (me === "ona") $("hello").textContent = `Dobré ráno, ${seeded(OSLO.ona, seed)}!`;
+    else if (me === "on") $("hello").textContent = `Dobré ráno, ${seeded(OSLO.on, seed)}!`;
+    else $("hello").textContent = loaded ? "Pro odškrtávání otevři svůj osobní odkaz 💌" : "";
+
     if (remaining === 0) {
-      $("bigCount").textContent = "✈️";
-      $("bigLabel").textContent = today > TARGET ? "Jste spolu ❤️" : "Dnes je to tady!";
+      $("bigCount").textContent = "♥️";
+      $("bigLabel").textContent = today > TARGET ? "Jsme spolu ♥️" : "Dnes se vidíme!";
     } else {
       $("bigCount").textContent = remaining;
-      $("bigLabel").textContent = `${dniWord(remaining)} do odletu`;
+      $("bigLabel").textContent = remaining === 1 ? "den a jsme spolu!" : `${dniWord(remaining)}, než se obejmeme`;
     }
+
+    // Dnešní vzkaz (stejný celý den)
+    const dw = me || "ona";
+    const dl = NOTES[dw];
+    const raw = remaining in MILNIKY ? MILNIKY[remaining] : (remaining === 0 ? (FIN.text || "Miluju tě!") : seeded(dl, seed));
+    $("dailyTxt").textContent = raw
+      .replace(/\{oslo\}/g, seeded(OSLO[dw], seed + 3))
+      .replace(/\{dny\}/g, remaining > 0 ? `${remaining} ${dniWord(remaining)}` : "pár hodin");
 
     // Tlačítko
     const btn = $("btnToday");
     const mySet = me === "on" ? on : ona;
-    const color = me === "on" ? "var(--a)" : "var(--b)";
-    btn.style.background = color;
+    btn.style.background = me === "on" ? "var(--a)" : "var(--b)";
     if (!loaded) { btn.disabled = true; btn.textContent = "Načítám…"; }
     else if (!me) { btn.disabled = true; btn.textContent = "Jen ke čtení"; }
     else if (today < START) { btn.disabled = true; btn.textContent = "Odpočet ještě nezačal"; }
-    else if (today > TARGET) { btn.disabled = true; btn.textContent = "Hotovo 🎉"; }
+    else if (today > TARGET) { btn.disabled = true; btn.textContent = "Jsme spolu 🎉"; }
     else if (mySet.has(todayKey)) { btn.disabled = true; btn.textContent = "Dnešek máš odškrtnutý ✓"; }
-    else { btn.disabled = busy; btn.textContent = remaining === 0 ? "Odškrtnout den odletu ✈️" : "Odškrtnout můj dnešek"; }
+    else { btn.disabled = busy; btn.textContent = remaining === 0 ? "Odškrtnout poslední den ✈️♥️" : "Odškrtnout můj dnešek ♥️"; }
+    $("btnFinale").classList.toggle("hidden", !(me && mySet.has(iso(TARGET))));
 
     // Kalendář
     const cal = $("calendar");
@@ -272,14 +557,15 @@
       const grid = document.createElement("div");
       grid.className = "grid";
       for (let i = 0; i < (first.getDay() + 6) % 7; i++) grid.insertAdjacentHTML("beforeend", '<div class="empty"></div>');
-
       list.forEach(d => {
         const k = iso(d);
         const left = diffDays(d, TARGET);
-        const b = document.createElement("button");
         const isFuture = d > today;
+        const b = document.createElement("button");
         b.className = "day";
+        b.dataset.k = k;
         if (left === 0) b.classList.add("final");
+        if (left in MILNIKY) b.classList.add("mile");
         if (isFuture) b.classList.add("future");
         if (k === todayKey) b.classList.add("today");
         if (on.has(k)) b.classList.add("a");
@@ -288,14 +574,14 @@
         if (!me) b.classList.add("readonly");
         b.innerHTML = `<span class="half l"></span><span class="half r"></span>
           <span class="num">${d.getDate()}.</span>
-          <span class="left">${left === 0 ? "✈️ odlet" : left + " " + dniWord(left)}</span>`;
-        const who = [on.has(k) && names.on, ona.has(k) && names.ona].filter(Boolean).join(" a ");
-        b.setAttribute("aria-label", `${d.getDate()}. ${d.getMonth() + 1}. — ${who ? "odškrtli: " + who : "nikdo neodškrtl"}`);
+          <span class="left">${left === 0 ? "✈️ ♥️" : left + " " + dniWord(left)}</span>`;
+        const who = [on.has(k) && NAMES.on, ona.has(k) && NAMES.ona].filter(Boolean).join(" a ");
+        b.setAttribute("aria-label", `${d.getDate()}. ${d.getMonth() + 1}. — ${who ? "odškrtli: " + who : "zatím neodškrtnuto"}`);
         b.onclick = () => {
           if (!me) return;
           if (isFuture) {
             b.animate([{ transform: "translateX(0)" }, { transform: "translateX(-4px)" }, { transform: "translateX(4px)" }, { transform: "translateX(0)" }], { duration: 250 });
-            notice("Tenhle den si odškrtneš, až přijde 😉");
+            notice(me === "ona" ? "Tenhle den si odškrtneš, až přijde, rošťáku 😜" : "Ještě ne, Myšku 😉");
             return;
           }
           toggle(k, !(me === "on" ? on : ona).has(k));
@@ -304,29 +590,34 @@
       });
       cal.appendChild(grid);
     });
-
-    $("finalMsg").classList.toggle("show", on.has(iso(TARGET)) && ona.has(iso(TARGET)));
   }
 
   $("btnToday").onclick = () => toggle(iso(midnight(new Date())), true);
-
-  // Při návratu do aplikace načti, co mezitím odškrtl ten druhý
+  addEventListener("keydown", e => { if (e.key === "Escape") { $("pop").classList.remove("show"); $("finClose").click(); } });
   document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
   setInterval(render, 60000);
 
+  // Sníh
   const snow = $("snow");
-  for (let i = 0; i < 28; i++) {
+  for (let i = 0; i < (reduced ? 0 : 26); i++) {
     const f = document.createElement("div");
-    f.className = "flake"; f.textContent = "❄";
+    f.className = "flake"; f.textContent = i % 9 === 0 ? "♥" : "❄";
+    f.style.color = i % 9 === 0 ? "#ff8fab" : "#fff";
     f.style.left = Math.random() * 100 + "vw";
     f.style.fontSize = (8 + Math.random() * 12) + "px";
-    f.style.animationDuration = (8 + Math.random() * 12) + "s";
+    f.style.animationDuration = (9 + Math.random() * 12) + "s";
     f.style.animationDelay = (-Math.random() * 20) + "s";
     snow.appendChild(f);
   }
 
+  // Ukázka pro test: ?demo=den | milnik | finale
+  const demo = params.get("demo");
   render();
-  load();
+  load().then(() => {
+    if (demo === "den") { fireworks("day"); setTimeout(() => showPhoto(fill(pick(NOTES[state.me || "ona"]), state.me || "ona", 20), false), 900); }
+    if (demo === "milnik") { fireworks("milestone"); heartRain(40); setTimeout(() => showPhoto(fill(MILNIKY[7], "ona", 7), true), 1400); }
+    if (demo === "finale") finale();
+  });
 }
 </script>
 </body>
