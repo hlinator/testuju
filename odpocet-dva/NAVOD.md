@@ -11,7 +11,10 @@ Všechny texty a fotky jsou v jediném souboru: **`odpocet-dva/vzkazy.js`**.
    - `{oslo}` se nahradí náhodným oslovením (Myško 🐭, Koblížku 🍩, …),
    - `{dny}` se nahradí počtem dní do odletu („12 dní“).
 4. Dole klikni **Commit changes**.
-5. Hotovo — web si stránku, vzkazy i fotky načítá přímo z GitHubu, takže změna je živá do ~5 minut (pak obnov stránku). Nic dalšího nasazovat netřeba.
+5. Otevři **svůj** osobní odkaz a dole klikni na **🔄 Načíst změny vzkazů a fotek z GitHubu** (vidíš ho jen ty). Aplikace se zkopíruje do soukromého úložiště na Vercelu a po chvíli se stránka sama obnoví.
+
+> Web je chráněný: stránka, vzkazy i fotky se vydají jen s jedním ze dvou osobních odkazů.
+> U soukromého repozitáře potřebuje tlačítko proměnnou `GITHUB_TOKEN` na Vercelu (token jen pro čtení obsahu repozitáře `testuju`).
 
 | Seznam | Kdo ho uvidí |
 |---|---|
@@ -40,7 +43,7 @@ Všechny texty a fotky jsou v jediném souboru: **`odpocet-dva/vzkazy.js`**.
 
 ## Vyzkoušení animací bez odškrtnutí
 
-Za svůj osobní odkaz přidej:
+Za svůj osobní odkaz (`?k=…`) přidej:
 - `&demo=den` – běžný den (ohňostroj + fotka),
 - `&demo=milnik` – milník,
 - `&demo=finale` – velké finále.
