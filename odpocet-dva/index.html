@@ -259,6 +259,7 @@
     <div class="txt" id="dailyTxt">…</div>
   </div>
   <button class="link" id="btnPhoto">📸 Ukaž mi nějakou naši fotku</button>
+  <button class="link hidden" id="btnSync">🔄 Načíst změny vzkazů a fotek z GitHubu</button>
 
   <div class="legend">
     <span><span class="dot" style="background:var(--a)"></span><span id="lg-on">Ondra</span></span>
@@ -300,7 +301,9 @@
 <script>
 (async () => {
   // Nejnovější vzkazy z GitHubu (úpravy se projeví bez nového nasazení); jinak záložní vzkazy.js
-  const REMOTE = "https://raw.githubusercontent.com/hlinator/testuju/refs/heads/claude/gracious-heisenberg-8rc5pu/odpocet-dva/vzkazy.js";
+  let K0 = new URLSearchParams(location.search).get("k");
+  try { K0 = K0 || localStorage.getItem("odpocet-k"); } catch (e) {}
+  const REMOTE = "/api/file?p=vzkazy.js&k=" + encodeURIComponent(K0 || "");
   try {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), 4000);
@@ -414,7 +417,7 @@
       const img = new Image();
       img.alt = "Naše fotka";
       img.onerror = () => { el.textContent = pick(EMOJI); };
-      img.src = (V.zdrojFotek || "") + src;
+      img.src = "/api/file?p=" + encodeURIComponent(src) + "&k=" + encodeURIComponent(key || "");
       el.appendChild(img);
     } else el.textContent = pick(EMOJI);
   }
@@ -687,6 +690,7 @@
     else { btn.disabled = busy; btn.textContent = remaining === 0 ? "Odškrtnout poslední den ✈️♥️" : "Odškrtnout můj dnešek ♥️"; }
     $("btnFinale").classList.toggle("hidden", !(me && mySet.has(iso(TARGET))));
     urgency();
+    $("btnSync").classList.toggle("hidden", me !== "on");
 
     // Kalendář
     const cal = $("calendar");
@@ -742,6 +746,16 @@
   }
 
   $("btnToday").onclick = () => toggle(iso(midnight(new Date())), true);
+  $("btnSync").onclick = async () => {
+    const b = $("btnSync"); b.disabled = true; b.textContent = "🔄 Načítám z GitHubu… (chvíli to trvá)";
+    try {
+      const r = await fetch("/api/sync?k=" + encodeURIComponent(key), { cache: "no-store" });
+      const j = await r.json();
+      if (!r.ok) throw new Error(j.error || r.status);
+      b.textContent = `✓ Hotovo — ${j.fotek} fotek${j.selhalo.length ? ", nepodařilo se: " + j.selhalo.join(", ") : ""}. Obnovuji…`;
+      setTimeout(() => location.reload(), 1800);
+    } catch (e) { b.textContent = "Nepodařilo se: " + e.message; b.disabled = false; }
+  };
   addEventListener("keydown", e => { if (e.key === "Escape" && !$("pop").classList.contains("show")) $("finClose").click(); });
   document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
   setInterval(render, 60000);

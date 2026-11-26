@@ -2,17 +2,11 @@
 //   ticks/<osoba>/<YYYY-MM-DD>
 // Díky tomu se zápisy obou lidí nikdy nepřepíšou navzájem.
 import { put, del, list } from "@vercel/blob";
+import { whoIs } from "./_auth.js";
 
-const START = "2026-11-25";
+const START = "2026-11-26";
 const TARGET = "2026-12-27";
 const PEOPLE = ["on", "ona"];
-
-function whoIs(k) {
-  if (!k) return null;
-  if (process.env.TOKEN_ON && k === process.env.TOKEN_ON) return "on";
-  if (process.env.TOKEN_ONA && k === process.env.TOKEN_ONA) return "ona";
-  return null;
-}
 
 async function readTicks() {
   const ticks = { on: [], ona: [] };
