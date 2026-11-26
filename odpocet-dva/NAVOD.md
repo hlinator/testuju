@@ -11,7 +11,7 @@ Všechny texty a fotky jsou v jediném souboru: **`odpocet-dva/vzkazy.js`**.
    - `{oslo}` se nahradí náhodným oslovením (Myško 🐭, Koblížku 🍩, …),
    - `{dny}` se nahradí počtem dní do odletu („12 dní“).
 4. Dole klikni **Commit changes**.
-5. Napiš mi do chatu „nasaď to“, nebo si propoj projekt na Vercelu s GitHubem (viz níže), aby se to nasazovalo samo.
+5. Hotovo — web si stránku, vzkazy i fotky načítá přímo z GitHubu, takže změna je živá do ~5 minut (pak obnov stránku). Nic dalšího nasazovat netřeba.
 
 | Seznam | Kdo ho uvidí |
 |---|---|
