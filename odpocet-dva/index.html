@@ -11,7 +11,7 @@
 <style>
   :root {
     --night: #0a1633; --night2: #1a1446; --card: #fdf6f0; --ink: #2a1f3d;
-    --a: #ffb703;   /* Ondra */
+    --a: #4dabf7;   /* Ondra – klučičí modrá */
     --b: #ff8fab;   /* Mája */
     --heart: #ff3b6b; --aur1: #3ddc97; --aur2: #9b5de5;
   }
@@ -45,15 +45,19 @@
   .big { font-size: clamp(4rem, 18vw, 5.5rem); font-weight: 800; line-height: 1; margin: 10px 0 2px; font-variant-numeric: tabular-nums; }
   .big-label { color: #e4dcff; font-size: 1.1rem; }
 
-  .people { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; margin: 22px 0 6px; }
-  .person { background: rgba(255,255,255,.08); border-radius: 16px; padding: 12px 14px; border: 2px solid transparent; }
-  .person.me { border-color: rgba(255,255,255,.4); }
-  .person .name { font-weight: 800; display: flex; align-items: center; gap: 8px; }
-  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex: none; }
-  .person .today-state { font-size: .85rem; color: #ece6ff; margin-top: 4px; }
-  .bar { height: 8px; background: rgba(255,255,255,.15); border-radius: 99px; overflow: hidden; margin-top: 8px; }
-  .bar > div { height: 100%; border-radius: 99px; transition: width .6s; }
-  .person .count { font-size: .78rem; color: #cfc6ec; margin-top: 4px; }
+  /* Společné srdce */
+  .together { display: flex; flex-direction: column; align-items: center; margin: 20px 0 4px; }
+  .heart-wrap { position: relative; width: min(250px, 60vw); aspect-ratio: 100 / 92; }
+  .heart-wrap svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 10px 28px rgba(255,59,107,.35)); }
+  .wave { animation: wave 3.2s linear infinite; }
+  @keyframes wave { from { transform: translateX(0); } to { transform: translateX(-100px); } }
+  .heart-label { position: absolute; inset: 18% 0 auto 0; text-align: center; pointer-events: none; text-shadow: 0 2px 10px rgba(20,10,50,.65); }
+  .heart-label .pct { font-size: clamp(2rem, 11vw, 2.8rem); font-weight: 800; line-height: 1; }
+  .heart-label .of { font-size: .85rem; color: #fff; opacity: .95; margin-top: 2px; }
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 12px; }
+  .chip { display: inline-flex; align-items: center; gap: 7px; background: rgba(255,255,255,.1); border-radius: 99px; padding: 7px 13px; font-size: .88rem; border: 2px solid transparent; }
+  .chip.me { border-color: rgba(255,255,255,.4); }
+  .together .hint { font-size: .8rem; color: #cfc6ec; margin-top: 8px; text-align: center; }
 
   .btn {
     display: block; margin: 18px auto 6px; padding: 15px 30px; min-height: 50px;
@@ -110,6 +114,16 @@
 
   footer { text-align: center; margin-top: 34px; font-family: "Caveat", cursive; font-size: 1.5rem; color: #ffd6e0; }
 
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex: none; }
+  .urgent { text-align: center; font-weight: 800; margin: 6px auto 0; max-width: 460px; min-height: 1.3em; color: #ffd166; }
+  .urgent.lvl3 { color: #ff8fab; font-size: 1.1rem; }
+  .urgent.lvl4 { color: #ff3b6b; font-size: 1.2rem; animation: shake .5s ease-in-out infinite; }
+  .btn.pulse { animation: pulse 1.1s ease-in-out infinite; }
+  .btn.panic { animation: panic .35s ease-in-out infinite; }
+  @keyframes pulse { 50% { transform: scale(1.07); box-shadow: 0 0 0 10px rgba(255,143,171,.25); } }
+  @keyframes panic { 25% { transform: rotate(-3deg) scale(1.08); } 75% { transform: rotate(3deg) scale(1.08); } }
+  @keyframes shake { 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+
   /* Ohňostroj */
   #fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 80; }
   .heart-rain { position: fixed; top: -40px; z-index: 81; pointer-events: none; animation: rain linear forwards; }
@@ -124,15 +138,25 @@
   .overlay.show { opacity: 1; pointer-events: auto; }
   .polaroid {
     background: #fff; color: var(--ink); padding: 14px 14px 16px; border-radius: 4px;
-    width: min(360px, 88vw); box-shadow: 0 20px 60px rgba(0,0,0,.5); text-align: center; position: relative;
+    width: min(360px, 90vw); max-height: 96vh; max-height: 96dvh; box-shadow: 0 20px 60px rgba(0,0,0,.5); text-align: center; position: relative;
     transform: scale(.2) rotate(-25deg) translateY(80px); opacity: 0;
   }
   .overlay.show .polaroid { animation: flyin .9s cubic-bezier(.2,1.4,.4,1) .15s forwards; }
   @keyframes flyin { to { transform: scale(1) rotate(-2.5deg) translateY(0); opacity: 1; } }
-  .photo { width: 100%; aspect-ratio: 4 / 5; background: linear-gradient(135deg, #ffe0ea, #e5dcff); display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 7rem; }
+  .photo { width: 100%; aspect-ratio: 4 / 5; max-height: 52vh; max-height: 52dvh; background: linear-gradient(135deg, #ffe0ea, #e5dcff); display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 7rem; }
   .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .polaroid .note { font-family: "Caveat", cursive; font-size: 1.8rem; line-height: 1.15; margin: 12px 4px 10px; }
-  .polaroid .btn { margin: 6px auto 0; background: var(--b); font-size: 1rem; padding: 12px 24px; }
+  .pbtns { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; position: relative; min-height: 56px; }
+  .polaroid .btn { margin: 0; font-size: 1rem; padding: 12px 22px; transition: transform .35s cubic-bezier(.3,1.6,.5,1), background .3s; }
+  #popClose { background: var(--b); }
+  #popOk { background: #e9e4f5; color: #5d5683; box-shadow: none; }
+  #popOk.flee { position: absolute; z-index: 3; }
+  .ptoast {
+    position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translateX(-50%) scale(.6); opacity: 0;
+    background: var(--ink); color: #fff; font-weight: 800; font-size: .95rem; padding: 9px 14px; border-radius: 12px;
+    width: max-content; max-width: 92%; pointer-events: none; transition: .3s cubic-bezier(.3,1.6,.5,1); z-index: 4;
+  }
+  .ptoast.show { opacity: 1; transform: translateX(-50%) scale(1); }
   .badge {
     position: absolute; top: -16px; right: -10px; background: var(--heart); color: #fff; font-weight: 800;
     padding: 6px 14px; border-radius: 99px; transform: rotate(8deg); box-shadow: 0 6px 16px rgba(0,0,0,.3); display: none;
@@ -159,12 +183,25 @@
 
   .hidden { display: none !important; }
 
+  @media (max-height: 640px) { .photo { max-height: 42vh; max-height: 42dvh; } .polaroid .note { font-size: 1.35rem; margin: 6px 2px; } }
+  @media (max-width: 340px) { .weekdays, .grid { gap: 3px; } .day .left { display: none; } }
   @media (max-width: 420px) {
+    .big { font-size: 3.6rem; margin-top: 6px; }
+    .couple { font-size: 2.1rem; }
+    .hello { margin-top: 8px; }
+    main { padding: 18px 12px 48px; }
+    .hello { font-size: 1.6rem; }
+    .btn { width: 100%; max-width: 340px; }
+    .polaroid .btn { width: auto; }
+    .polaroid { padding: 10px 10px 12px; }
+    .polaroid .note { font-size: 1.5rem; margin: 8px 2px; }
+    .daily .txt { font-size: 1.45rem; }
+    .legend { gap: 10px; }
+    .fin-text { font-size: 1rem; padding: 0 12px; }
     .weekdays, .grid { gap: 5px; }
     .day { border-radius: 10px; }
     .day .num { font-size: 1rem; }
     .day .left { font-size: .55rem; }
-    .person { padding: 10px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .flake, .aurora::before, .aurora::after, .couple .plane, .fin-title, .badge.show { animation: none !important; }
@@ -185,24 +222,37 @@
     <div class="big-label" id="bigLabel">dní, než se obejmeme</div>
   </header>
 
-  <section class="people">
-    <div class="person" id="p-on">
-      <div class="name"><span class="dot" style="background:var(--a)"></span><span class="nm">Ondra</span></div>
-      <div class="today-state"></div>
-      <div class="bar"><div style="background:var(--a);width:0"></div></div>
-      <div class="count"></div>
-    </div>
-    <div class="person" id="p-ona">
-      <div class="name"><span class="dot" style="background:var(--b)"></span><span class="nm">Mája</span></div>
-      <div class="today-state"></div>
-      <div class="bar"><div style="background:var(--b);width:0"></div></div>
-      <div class="count"></div>
-    </div>
-  </section>
 
   <button class="btn" id="btnToday" disabled>Načítám…</button>
+  <p class="urgent" id="urgent"></p>
   <p class="notice" id="notice"></p>
   <button class="link hidden" id="btnFinale">🎆 Spustit oslavu znovu</button>
+
+  <section class="together" aria-label="Společné srdce">
+    <div class="heart-wrap">
+      <svg viewBox="0 0 100 92" aria-hidden="true">
+        <defs>
+          <clipPath id="hc"><path d="M50 90C22 68 2 52 2 29 2 13 14 2 28.5 2 38 2 46 7.5 50 16 54 7.5 62 2 71.5 2 86 2 98 13 98 29 98 52 78 68 50 90Z"/></clipPath>
+          <linearGradient id="hg" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#4dabf7"/><stop offset=".55" stop-color="#b388ff"/><stop offset="1" stop-color="#ff8fab"/>
+          </linearGradient>
+        </defs>
+        <g clip-path="url(#hc)">
+          <rect width="100" height="92" fill="rgba(255,255,255,.1)"/>
+          <g id="hfill" style="transition: transform 1.2s cubic-bezier(.3,1.2,.5,1)">
+            <path class="wave" fill="url(#hg)" d="M0 4 Q12.5 0 25 4 T50 4 T75 4 T100 4 T125 4 T150 4 T175 4 T200 4 V200 H0Z"/>
+          </g>
+        </g>
+        <path d="M50 90C22 68 2 52 2 29 2 13 14 2 28.5 2 38 2 46 7.5 50 16 54 7.5 62 2 71.5 2 86 2 98 13 98 29 98 52 78 68 50 90Z" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="2"/>
+      </svg>
+      <div class="heart-label"><div class="pct" id="hPct">0 %</div><div class="of" id="hOf"></div></div>
+    </div>
+    <div class="chips">
+      <span class="chip" id="c-on"><span class="dot" style="background:var(--a)"></span><span class="t"></span></span>
+      <span class="chip" id="c-ona"><span class="dot" style="background:var(--b)"></span><span class="t"></span></span>
+    </div>
+    <div class="hint" id="hHint">Každé odškrtnutí od kohokoli z nás srdce trochu zaplní ♥</div>
+  </section>
 
   <div class="daily">
     <div class="lbl">Dnešní vzkaz 💌</div>
@@ -228,7 +278,11 @@
     <div class="badge" id="popBadge">★ Milník!</div>
     <div class="photo" id="popPhoto"></div>
     <p class="note" id="popNote"></p>
-    <button class="btn" id="popClose">Taky tě miluju ♥️</button>
+    <div class="pbtns" id="pbtns">
+      <div class="ptoast" id="ptoast"></div>
+      <button class="btn" id="popClose">Taky tě miluju ♥️</button>
+      <button class="btn" id="popOk">OK</button>
+    </div>
   </div>
 </div>
 
@@ -268,7 +322,7 @@
   const FIN = V.finale || {};
   const EMOJI = ["🐭", "🧩", "♥️", "🐣", "🐻", "🍩"];
 
-  const START = new Date(2026, 10, 25);
+  const START = new Date(2026, 10, 26);
   const TARGET = new Date(2026, 11, 27);
   const MONTHS = ["leden","únor","březen","duben","květen","červen","červenec","srpen","září","říjen","listopad","prosinec"];
   const WEEKDAYS = ["Po","Út","St","Čt","Pá","So","Ne"];
@@ -370,11 +424,61 @@
     $("popNote").textContent = note;
     $("popBadge").classList.toggle("show", !!isMile);
     $("popClose").textContent = state.me === "on" ? "Těším se ♥️" : "Taky tě miluju ♥️";
+    resetOk();
     $("pop").classList.add("show");
     setTimeout(() => $("popClose").focus(), 400);
   }
+  // Zavřít jde JEN tlačítkem „Taky tě miluju" (ne kliknutím vedle, ne Escapem)
   $("popClose").onclick = () => $("pop").classList.remove("show");
-  $("pop").onclick = e => { if (e.target.id === "pop") $("pop").classList.remove("show"); };
+
+  // ---- Hravé tlačítko OK ----
+  const isHim = () => state.me === "on";
+  const OK_STEPS = V.okVtipy || [
+    { toast: "Jen OK? To je všechno? 🥺", ok: "ok…", okScale: .8 },
+    { toast: "Fakt jsi dala znovu OK???? 😳", ok: "ok?", okScale: .65, loveScale: 1.1 },
+    { toast: "{oslo}, tohle tlačítko je jen na ozdobu 😤", ok: "o.k.", okScale: .55, loveScale: 1.2 },
+    { toast: "Chyť mě, jestli to dokážeš! 😜", ok: "OK", okScale: .55, loveScale: 1.25, flee: true },
+    { toast: "Ha, vedle! 🐭💨", ok: "OK", okScale: .5, loveScale: 1.3, flee: true },
+    { toast: "Tlačítko OK odletělo do Finska 🇫🇮✈️", ok: "✈️", okScale: .45, loveScale: 1.35, flee: true },
+    { toast: "Dobře, dobře… tak teda takhle ♥️", ok: "Taky tě miluju ♥️", okScale: 1, loveScale: 1.1, love: true },
+  ];
+  let okStep = 0, toastT;
+  function toast(t) {
+    const el = $("ptoast");
+    el.textContent = t.replace(/\{oslo\}/g, () => pick(OSLO[state.me || "ona"])).replace(/dala/g, isHim() ? "dal" : "dala");
+    el.classList.add("show");
+    clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove("show"), 2400);
+  }
+  function resetOk() {
+    okStep = 0;
+    const ok = $("popOk"), love = $("popClose");
+    ok.textContent = "OK"; ok.classList.remove("flee"); ok.style.cssText = ""; love.style.transform = "";
+    $("ptoast").classList.remove("show");
+  }
+  $("popOk").onclick = e => {
+    e.stopPropagation();
+    const ok = $("popOk"), love = $("popClose");
+    const st = OK_STEPS[Math.min(okStep, OK_STEPS.length - 1)];
+    if (okStep >= OK_STEPS.length) { $("pop").classList.remove("show"); return; } // po proměně zavírá
+    okStep++;
+    toast(st.toast || "");
+    ok.textContent = st.ok || "OK";
+    love.style.transform = st.loveScale ? `scale(${st.loveScale})` : "";
+    if (st.love) {
+      ok.classList.remove("flee"); ok.style.cssText = "";
+      ok.style.background = "var(--b)"; ok.style.color = "var(--ink)";
+      okStep = OK_STEPS.length; // další klik už zavře
+      fireworks("day");
+      return;
+    }
+    if (st.flee) {
+      const box = $("pbtns").getBoundingClientRect();
+      ok.classList.add("flee");
+      const x = Math.random() * Math.max(0, box.width - 70), y = -40 - Math.random() * 90;
+      ok.style.left = x + "px"; ok.style.top = y + "px";
+      ok.style.transform = `scale(${st.okScale}) rotate(${Math.random() * 40 - 20}deg)`;
+    } else ok.style.transform = `scale(${st.okScale})`;
+  };
 
   $("btnPhoto").onclick = () => {
     const who = state.me || "ona";
@@ -497,6 +601,33 @@
     startFx();
   }
 
+  // ---- Gradující připomínky před koncem dne ----
+  const PRIPOMINKY = V.pripominky || [
+    { hodin: 6, text: "{oslo}, dnešek ještě není odškrtnutý 🙂" },
+    { hodin: 3, text: "Tik tak… do půlnoci zbývá {cas} ⏳ Odškrtni mě!" },
+    { hodin: 1, text: "Poslední hodina! Zbývá {cas} 🥺 Nenech mě smutnýho" },
+    { hodin: 0.25, text: "POSLEDNÍCH {cas}!!! 🚨🐭 RYCHLE ODŠKRTNI!!!" },
+  ];
+  function urgency() {
+    const el = $("urgent"), btn = $("btnToday");
+    const me = state.me, now = new Date(), todayKey = iso(midnight(now));
+    const set = new Set((state.ticks[me] || []));
+    btn.classList.remove("pulse", "panic");
+    el.className = "urgent"; el.textContent = "";
+    if (!me || !loaded || set.has(todayKey) || now < START || midnight(now) > TARGET) return;
+    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const mins = Math.max(0, Math.ceil((end - now) / 60000));
+    const cas = mins >= 60 ? `${Math.floor(mins / 60)} h ${mins % 60} min` : `${mins} min`;
+    const sorted = [...PRIPOMINKY].sort((a, b) => b.hodin - a.hodin);
+    let lvl = 0, hit = null;
+    sorted.forEach((p, i) => { if (mins <= p.hodin * 60) { hit = p; lvl = i + 1; } });
+    if (!hit) return;
+    el.textContent = hit.text.replace(/\{oslo\}/g, seeded(OSLO[me], now.getDate())).replace(/\{cas\}/g, cas);
+    el.classList.add("lvl" + lvl);
+    if (lvl >= 4) btn.classList.add("panic"); else if (lvl >= 2) btn.classList.add("pulse");
+  }
+  setInterval(urgency, 20000);
+
   // ================= VYKRESLENÍ =================
   function render() {
     const today = midnight(new Date());
@@ -506,22 +637,26 @@
     const remaining = Math.max(0, diffDays(today, TARGET));
 
     $("nmOn").textContent = NAMES.on; $("nmOna").textContent = NAMES.ona;
+    // Společné srdce: každé odškrtnutí (od kohokoli) ho plní; poslední den je plné
+    const total = days.length * 2;
+    const filled = days.filter(d => on.has(iso(d))).length + days.filter(d => ona.has(iso(d))).length;
+    const pct = filled / total;
+    const hgt = pct >= 1 ? 1 : (pct > 0 ? Math.max(.07, pct ** .6) : 0); // výška podle plochy srdce (u špičky je ho málo)
+    $("hfill").style.transform = `translateY(${(1 - hgt) * 92 - (pct >= 1 ? 6 : 0)}px)`;
+    $("hPct").textContent = Math.round(pct * 100) + " %";
+    $("hOf").textContent = `${filled} z ${total} srdíček`;
     for (const who of ["on", "ona"]) {
-      const box = $("p-" + who);
-      box.querySelector(".nm").textContent = NAMES[who] + (me === who ? " (ty)" : "");
-      box.classList.toggle("me", me === who);
-      const set = who === "on" ? on : ona;
-      const done = days.filter(d => set.has(iso(d))).length;
-      box.querySelector(".bar > div").style.width = (done / days.length * 100) + "%";
-      box.querySelector(".count").textContent = `Odškrtnuto ${done} z ${days.length}`;
-      box.querySelector(".today-state").textContent = !loaded ? "…" : (set.has(todayKey) ? "Dnešek odškrtnutý ✓" : "Dnešek ještě ne");
+      const c = $("c-" + who), set = who === "on" ? on : ona;
+      c.classList.toggle("me", me === who);
+      c.querySelector(".t").textContent = `${NAMES[who]}${me === who ? " (ty)" : ""}: ${!loaded ? "…" : (set.has(todayKey) ? "dnes ✓" : "dnes ještě ne")}`;
       $("lg-" + who).textContent = NAMES[who];
     }
 
-    // Pozdrav: oslovení se mění podle dne
+    // Pozdrav podle denní doby
     const seed = today.getDate() + today.getMonth() * 31;
-    if (me === "ona") $("hello").textContent = `Dobré ráno, ${seeded(OSLO.ona, seed)}!`;
-    else if (me === "on") $("hello").textContent = `Dobré ráno, ${seeded(OSLO.on, seed)}!`;
+    const h = new Date().getHours();
+    const greet = h >= 4 && h < 9 ? "Dobré ráno" : h < 12 ? "Krásné dopoledne" : h < 17 ? "Krásné odpoledne" : h < 22 ? "Krásný večer" : "Dobrou noc";
+    if (me === "ona" || me === "on") $("hello").textContent = `${greet}, ${seeded(OSLO[me], seed)}!`;
     else $("hello").textContent = loaded ? "Pro odškrtávání otevři svůj osobní odkaz 💌" : "";
 
     if (remaining === 0) {
@@ -551,6 +686,7 @@
     else if (mySet.has(todayKey)) { btn.disabled = true; btn.textContent = "Dnešek máš odškrtnutý ✓"; }
     else { btn.disabled = busy; btn.textContent = remaining === 0 ? "Odškrtnout poslední den ✈️♥️" : "Odškrtnout můj dnešek ♥️"; }
     $("btnFinale").classList.toggle("hidden", !(me && mySet.has(iso(TARGET))));
+    urgency();
 
     // Kalendář
     const cal = $("calendar");
@@ -606,7 +742,7 @@
   }
 
   $("btnToday").onclick = () => toggle(iso(midnight(new Date())), true);
-  addEventListener("keydown", e => { if (e.key === "Escape") { $("pop").classList.remove("show"); $("finClose").click(); } });
+  addEventListener("keydown", e => { if (e.key === "Escape" && !$("pop").classList.contains("show")) $("finClose").click(); });
   document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
   setInterval(render, 60000);
 

@@ -20,6 +20,8 @@ Všechny texty a fotky jsou v jediném souboru: **`odpocet-dva/vzkazy.js`**.
 | `proNi` | vzkazy, které jí vyskočí s fotkou po odškrtnutí |
 | `proNej` | vzkazy pro tebe |
 | `milniky` | speciální vzkaz pro milníkové dny (30, 21, 14, 10, 7, 3, 2, 1 den do odletu) – lze přidat i jiná čísla |
+| `okVtipy` | kroky hravého tlačítka „OK“ u fotky (hláška, text, zmenšení, útěk, proměna) |
+| `pripominky` | gradující připomínky před půlnocí, když dnešek ještě není odškrtnutý (`{cas}` = zbývající čas) |
 | `finale` | nadpis, text a popisky fotek ve velkém finále 27. 12. |
 
 ## Přidání fotek

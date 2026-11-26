@@ -60,6 +60,28 @@ window.VZKAZY = {
     1:  "ZÍTRA! Zítra tě obejmu, {oslo}! ♥️♥️♥️",
   },
 
+  // Hravé tlačítko „OK" u fotky — každé další kliknutí na OK udělá další krok.
+  //   toast = bublina s hláškou, ok = nový text tlačítka OK, okScale = velikost OK,
+  //   loveScale = zvětšení „Taky tě miluju", flee = OK uteče jinam, love = OK se promění v „Taky tě miluju"
+  okVtipy: [
+    { toast: "Jen OK? To je všechno? 🥺", ok: "ok…", okScale: 0.8 },
+    { toast: "Fakt jsi dala znovu OK???? 😳", ok: "ok?", okScale: 0.65, loveScale: 1.1 },
+    { toast: "{oslo}, tohle tlačítko je jen na ozdobu 😤", ok: "o.k.", okScale: 0.55, loveScale: 1.2 },
+    { toast: "Chyť mě, jestli to dokážeš! 😜", ok: "OK", okScale: 0.55, loveScale: 1.25, flee: true },
+    { toast: "Ha, vedle! 🐭💨", ok: "OK", okScale: 0.5, loveScale: 1.3, flee: true },
+    { toast: "Tlačítko OK odletělo do Finska 🇫🇮✈️", ok: "✈️", okScale: 0.45, loveScale: 1.35, flee: true },
+    { toast: "Dobře, dobře… tak teda takhle ♥️", ok: "Taky tě miluju ♥️", okScale: 1, loveScale: 1.1, love: true },
+  ],
+
+  // Připomínky, když se blíží půlnoc a dnešek ještě není odškrtnutý.
+  //   hodin = kolik hodin před půlnocí se začne ukazovat; {cas} = zbývající čas, {oslo} = oslovení
+  pripominky: [
+    { hodin: 6, text: "{oslo}, dnešek ještě není odškrtnutý 🙂" },
+    { hodin: 3, text: "Tik tak… do půlnoci zbývá {cas} ⏳ Odškrtni mě!" },
+    { hodin: 1, text: "Poslední hodina! Zbývá {cas} 🥺 Nenech mě smutnýho" },
+    { hodin: 0.25, text: "POSLEDNÍCH {cas}!!! 🚨🐭 RYCHLE ODŠKRTNI!!!" },
+  ],
+
   // Velké finále (27. 12.)
   finale: {
     nadpis: "Dnes se vidíme! ♥️",
