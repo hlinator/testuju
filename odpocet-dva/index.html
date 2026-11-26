@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b2545">
+<title>Odpočet do Finska ✈️</title>
+<style>
+  :root {
+    --bg: #0b2545; --bg2: #13315c; --card: #f4f7fb; --ink: #0b2545; --muted: #6b7a90;
+    --a: #ffb703;   /* on */
+    --b: #8ecae6;   /* ona */
+    --heart: #e5383b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; color: #fff; overflow-x: hidden;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  }
+  .snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .flake { position: absolute; top: -10px; color: #fff; opacity: .5; animation: fall linear infinite; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .flake { display: none; } }
+
+  main { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 26px 16px 48px; }
+  header { text-align: center; }
+  h1 { font-size: 1.5rem; margin: 0 0 6px; }
+  .sub { color: #b9c7dd; margin: 0; }
+  .hello { margin: 10px 0 0; font-weight: 600; min-height: 1.3em; }
+  .big { font-size: 5rem; font-weight: 800; line-height: 1; margin: 16px 0 4px; font-variant-numeric: tabular-nums; }
+  .big-label { color: #b9c7dd; font-size: 1.05rem; }
+
+  .people { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 22px 0 6px; }
+  .person {
+    background: rgba(255,255,255,.08); border-radius: 14px; padding: 12px 14px;
+    border: 2px solid transparent;
+  }
+  .person.me { border-color: rgba(255,255,255,.35); }
+  .person .name { font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex: none; }
+  .person .today-state { font-size: .85rem; color: #dfe7f2; margin-top: 4px; }
+  .bar { height: 8px; background: rgba(255,255,255,.15); border-radius: 99px; overflow: hidden; margin-top: 8px; }
+  .bar > div { height: 100%; border-radius: 99px; transition: width .4s; }
+  .person .count { font-size: .78rem; color: #b9c7dd; margin-top: 4px; }
+
+  .btn-today {
+    display: block; margin: 18px auto 8px; padding: 15px 28px; min-height: 48px;
+    font-size: 1.05rem; font-weight: 700; border: 0; border-radius: 14px;
+    color: var(--ink); cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  }
+  .btn-today:disabled { background: #5e7697 !important; color: #dfe7f2; cursor: default; box-shadow: none; }
+  .btn-today:focus-visible, .day:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+  .notice { text-align: center; color: #b9c7dd; font-size: .9rem; margin: 6px 0 0; min-height: 1.2em; }
+  .notice.err { color: #ffadad; }
+
+  .legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; font-size: .78rem; color: #b9c7dd; margin: 18px 0 0; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  .month { margin: 18px 0 8px; font-weight: 700; color: #dfe7f2; text-transform: capitalize; }
+  .weekdays, .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+  .weekdays div { text-align: center; font-size: .75rem; color: #8fa3c0; }
+  .day {
+    position: relative; aspect-ratio: 1 / 1; border-radius: 12px; border: 0; overflow: hidden;
+    background: var(--card); color: var(--ink); cursor: pointer; font: inherit; padding: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: transform .1s;
+  }
+  .day:active { transform: scale(.94); }
+  .day .half { position: absolute; top: 0; bottom: 0; width: 50%; opacity: 0; transition: opacity .2s; }
+  .day .half.l { left: 0; background: var(--a); }
+  .day .half.r { right: 0; background: var(--b); }
+  .day.a .half.l, .day.b .half.r { opacity: 1; }
+  .day .num, .day .left { position: relative; }
+  .day .num { font-size: 1.15rem; font-weight: 700; }
+  .day .left { font-size: .65rem; color: #33445c; margin-top: 2px; }
+  .day.both::after { content: "❤"; position: absolute; top: 2px; right: 5px; color: var(--heart); font-size: .8rem; }
+  .day.future { opacity: .5; cursor: not-allowed; }
+  .day.today { outline: 3px solid #fff; outline-offset: 2px; }
+  .day.readonly { cursor: default; }
+  .day.final:not(.a):not(.b) { background: linear-gradient(135deg, #fff 0 40%, #003580 40% 60%, #fff 60%); }
+  .day.final .num, .day.final .left { background: rgba(255,255,255,.85); border-radius: 5px; padding: 0 4px; }
+  .empty { aspect-ratio: 1 / 1; }
+
+  .final-msg { display: none; text-align: center; background: rgba(255,255,255,.1); border-radius: 16px; padding: 20px; margin-top: 26px; font-size: 1.2rem; }
+  .final-msg.show { display: block; }
+
+  @media (max-width: 420px) {
+    .big { font-size: 4rem; }
+    .weekdays, .grid { gap: 5px; }
+    .day { border-radius: 9px; }
+    .day .num { font-size: 1rem; }
+    .day .left { font-size: .55rem; }
+    .person { padding: 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="snow" id="snow"></div>
+<main>
+  <header>
+    <h1>✈️ Odpočet do Finska 🇫🇮</h1>
+    <p class="sub">Odlet 27. prosince 2026</p>
+    <p class="hello" id="hello"></p>
+    <div class="big" id="bigCount">–</div>
+    <div class="big-label" id="bigLabel">dní do odletu</div>
+  </header>
+
+  <section class="people">
+    <div class="person" id="p-on">
+      <div class="name"><span class="dot" style="background:var(--a)"></span><span class="nm">On</span></div>
+      <div class="today-state"></div>
+      <div class="bar"><div style="background:var(--a);width:0"></div></div>
+      <div class="count"></div>
+    </div>
+    <div class="person" id="p-ona">
+      <div class="name"><span class="dot" style="background:var(--b)"></span><span class="nm">Ona</span></div>
+      <div class="today-state"></div>
+      <div class="bar"><div style="background:var(--b);width:0"></div></div>
+      <div class="count"></div>
+    </div>
+  </section>
+
+  <button class="btn-today" id="btnToday" disabled>Načítám…</button>
+  <p class="notice" id="notice"></p>
+
+  <div class="legend">
+    <span><span class="dot" style="background:var(--a)"></span><span id="lg-on">On</span></span>
+    <span><span class="dot" style="background:var(--b)"></span><span id="lg-ona">Ona</span></span>
+    <span><span style="color:var(--heart)">❤</span> oba</span>
+  </div>
+
+  <div id="calendar"></div>
+
+  <div class="final-msg" id="finalMsg">
+    🎉 Je to tady! Konečně spolu. ❤️<br><small>Hyvää matkaa!</small>
+  </div>
+</main>
+
+<script>
+{
+  const START = new Date(2026, 10, 25);
+  const TARGET = new Date(2026, 11, 27);
+  const MONTHS = ["leden","únor","březen","duben","květen","červen","červenec","srpen","září","říjen","listopad","prosinec"];
+  const WEEKDAYS = ["Po","Út","St","Čt","Pá","So","Ne"];
+  const DAY = 864e5;
+
+  const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  const midnight = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diffDays = (a, b) => Math.round((midnight(b) - midnight(a)) / DAY);
+  const dniWord = n => n === 1 ? "den" : (n >= 2 && n <= 4 ? "dny" : "dní");
+  const $ = id => document.getElementById(id);
+
+  // Osobní klíč z odkazu (?k=...), zapamatovaný i pro příště
+  const params = new URLSearchParams(location.search);
+  let key = params.get("k");
+  try {
+    if (key) localStorage.setItem("odpocet-k", key);
+    else key = localStorage.getItem("odpocet-k");
+  } catch (e) {}
+
+  let state = { me: null, names: { on: "On", ona: "Ona" }, ticks: { on: [], ona: [] } };
+  let loaded = false;
+  let busy = false;
+
+  const days = [];
+  for (let d = new Date(START); d <= TARGET; d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)) days.push(d);
+
+  function notice(t, err) { const n = $("notice"); n.textContent = t || ""; n.classList.toggle("err", !!err); }
+
+  async function load() {
+    try {
+      const r = await fetch("/api/state" + (key ? "?k=" + encodeURIComponent(key) : ""), { cache: "no-store" });
+      if (!r.ok) throw new Error();
+      state = await r.json();
+      loaded = true;
+      if (key && !state.me) {
+        try { localStorage.removeItem("odpocet-k"); } catch (e) {}
+        notice("Tenhle osobní odkaz neznám — kalendář je jen ke čtení.", true);
+      }
+    } catch (e) {
+      notice("Nepodařilo se načíst stav. Zkus obnovit stránku.", true);
+    }
+    render();
+  }
+
+  async function toggle(date, done) {
+    if (!state.me || busy) return;
+    busy = true;
+    // Optimistická změna
+    const mine = new Set(state.ticks[state.me]);
+    done ? mine.add(date) : mine.delete(date);
+    state.ticks[state.me] = [...mine];
+    render();
+    notice("Ukládám…");
+    try {
+      const r = await fetch("/api/state", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ k: key, date, done })
+      });
+      const j = await r.json();
+      if (!r.ok) throw new Error(j.error || "Chyba");
+      state = j;
+      notice("Uloženo ✓");
+      setTimeout(() => { if ($("notice").textContent === "Uloženo ✓") notice(""); }, 2500);
+    } catch (e) {
+      notice("Nepodařilo se uložit: " + e.message, true);
+      await load();
+    }
+    busy = false;
+    render();
+  }
+
+  function render() {
+    const today = midnight(new Date());
+    const todayKey = iso(today);
+    const on = new Set(state.ticks.on), ona = new Set(state.ticks.ona);
+    const me = state.me;
+    const names = state.names;
+
+    // Jména
+    for (const who of ["on", "ona"]) {
+      const box = $("p-" + who);
+      box.querySelector(".nm").textContent = names[who] + (me === who ? " (ty)" : "");
+      box.classList.toggle("me", me === who);
+      const set = who === "on" ? on : ona;
+      const done = days.filter(d => set.has(iso(d))).length;
+      box.querySelector(".bar > div").style.width = (done / days.length * 100) + "%";
+      box.querySelector(".count").textContent = `Odškrtnuto ${done} z ${days.length}`;
+      box.querySelector(".today-state").textContent = !loaded ? "…" : (set.has(todayKey) ? "Dnešek odškrtnutý ✓" : "Dnešek ještě ne");
+      $("lg-" + who).textContent = names[who];
+    }
+    $("hello").textContent = me ? `Ahoj, ${names[me]}! 👋` : (loaded ? "Jen prohlížení — pro odškrtávání otevři svůj osobní odkaz." : "");
+
+    // Velké číslo
+    const remaining = Math.max(0, diffDays(today, TARGET));
+    if (remaining === 0) {
+      $("bigCount").textContent = "✈️";
+      $("bigLabel").textContent = today > TARGET ? "Jste spolu ❤️" : "Dnes je to tady!";
+    } else {
+      $("bigCount").textContent = remaining;
+      $("bigLabel").textContent = `${dniWord(remaining)} do odletu`;
+    }
+
+    // Tlačítko
+    const btn = $("btnToday");
+    const mySet = me === "on" ? on : ona;
+    const color = me === "on" ? "var(--a)" : "var(--b)";
+    btn.style.background = color;
+    if (!loaded) { btn.disabled = true; btn.textContent = "Načítám…"; }
+    else if (!me) { btn.disabled = true; btn.textContent = "Jen ke čtení"; }
+    else if (today < START) { btn.disabled = true; btn.textContent = "Odpočet ještě nezačal"; }
+    else if (today > TARGET) { btn.disabled = true; btn.textContent = "Hotovo 🎉"; }
+    else if (mySet.has(todayKey)) { btn.disabled = true; btn.textContent = "Dnešek máš odškrtnutý ✓"; }
+    else { btn.disabled = busy; btn.textContent = remaining === 0 ? "Odškrtnout den odletu ✈️" : "Odškrtnout můj dnešek"; }
+
+    // Kalendář
+    const cal = $("calendar");
+    cal.innerHTML = "";
+    const byMonth = {};
+    days.forEach(d => (byMonth[d.getFullYear() + "-" + d.getMonth()] ||= []).push(d));
+    Object.values(byMonth).forEach(list => {
+      const first = list[0];
+      const title = document.createElement("div");
+      title.className = "month";
+      title.textContent = `${MONTHS[first.getMonth()]} ${first.getFullYear()}`;
+      cal.appendChild(title);
+      const wd = document.createElement("div");
+      wd.className = "weekdays";
+      wd.innerHTML = WEEKDAYS.map(w => `<div>${w}</div>`).join("");
+      cal.appendChild(wd);
+      const grid = document.createElement("div");
+      grid.className = "grid";
+      for (let i = 0; i < (first.getDay() + 6) % 7; i++) grid.insertAdjacentHTML("beforeend", '<div class="empty"></div>');
+
+      list.forEach(d => {
+        const k = iso(d);
+        const left = diffDays(d, TARGET);
+        const b = document.createElement("button");
+        const isFuture = d > today;
+        b.className = "day";
+        if (left === 0) b.classList.add("final");
+        if (isFuture) b.classList.add("future");
+        if (k === todayKey) b.classList.add("today");
+        if (on.has(k)) b.classList.add("a");
+        if (ona.has(k)) b.classList.add("b");
+        if (on.has(k) && ona.has(k)) b.classList.add("both");
+        if (!me) b.classList.add("readonly");
+        b.innerHTML = `<span class="half l"></span><span class="half r"></span>
+          <span class="num">${d.getDate()}.</span>
+          <span class="left">${left === 0 ? "✈️ odlet" : left + " " + dniWord(left)}</span>`;
+        const who = [on.has(k) && names.on, ona.has(k) && names.ona].filter(Boolean).join(" a ");
+        b.setAttribute("aria-label", `${d.getDate()}. ${d.getMonth() + 1}. — ${who ? "odškrtli: " + who : "nikdo neodškrtl"}`);
+        b.onclick = () => {
+          if (!me) return;
+          if (isFuture) {
+            b.animate([{ transform: "translateX(0)" }, { transform: "translateX(-4px)" }, { transform: "translateX(4px)" }, { transform: "translateX(0)" }], { duration: 250 });
+            notice("Tenhle den si odškrtneš, až přijde 😉");
+            return;
+          }
+          toggle(k, !(me === "on" ? on : ona).has(k));
+        };
+        grid.appendChild(b);
+      });
+      cal.appendChild(grid);
+    });
+
+    $("finalMsg").classList.toggle("show", on.has(iso(TARGET)) && ona.has(iso(TARGET)));
+  }
+
+  $("btnToday").onclick = () => toggle(iso(midnight(new Date())), true);
+
+  // Při návratu do aplikace načti, co mezitím odškrtl ten druhý
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
+  setInterval(render, 60000);
+
+  const snow = $("snow");
+  for (let i = 0; i < 28; i++) {
+    const f = document.createElement("div");
+    f.className = "flake"; f.textContent = "❄";
+    f.style.left = Math.random() * 100 + "vw";
+    f.style.fontSize = (8 + Math.random() * 12) + "px";
+    f.style.animationDuration = (8 + Math.random() * 12) + "s";
+    f.style.animationDelay = (-Math.random() * 20) + "s";
+    snow.appendChild(f);
+  }
+
+  render();
+  load();
+}
+</script>
+</body>
+</html>
