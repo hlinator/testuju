@@ -64,13 +64,13 @@ window.VZKAZY = {
   //   toast = bublina s hláškou, ok = nový text tlačítka OK, okScale = velikost OK,
   //   loveScale = zvětšení „Taky tě miluju", flee = OK uteče jinam, love = OK se promění v „Taky tě miluju"
   okVtipy: [
-    { toast: "Jen OK? To je všechno? 🥺", ok: "ok…", okScale: 0.8 },
-    { toast: "Fakt jsi dala znovu OK???? 😳", ok: "ok?", okScale: 0.65, loveScale: 1.1 },
-    { toast: "{oslo}, tohle tlačítko je jen na ozdobu 😤", ok: "o.k.", okScale: 0.55, loveScale: 1.2 },
-    { toast: "Chyť mě, jestli to dokážeš! 😜", ok: "OK", okScale: 0.55, loveScale: 1.25, flee: true },
-    { toast: "Ha, vedle! 🐭💨", ok: "OK", okScale: 0.5, loveScale: 1.3, flee: true },
+    { toast: "Jenom OK? Za víc ti nestojim? 🥺", ok: "ok…", okScale: 0.8 },
+    { toast: "Fakt jsi dala znovu OK????", ok: "ok?", okScale: 0.65, loveScale: 1.1 },
+    { toast: "{oslo}, tohle mi nedělej", ok: "o.k.", okScale: 0.55, loveScale: 1.2 },
+    { toast: "VEDLEEE", ok: "OK", okScale: 0.55, loveScale: 1.25, flee: true },
+    { toast: "ŠPATNĚ, zkus to znova", ok: "OK", okScale: 0.5, loveScale: 1.3, flee: true },
     { toast: "Tlačítko OK odletělo do Finska 🇫🇮✈️", ok: "✈️", okScale: 0.45, loveScale: 1.35, flee: true },
-    { toast: "Dobře, dobře… tak teda takhle ♥️", ok: "Taky tě miluju ♥️", okScale: 1, loveScale: 1.1, love: true },
+    { toast: "Dobře, dobře, tak jak chceš", ok: "Taky tě miluju ♥️", okScale: 1, loveScale: 1.1, love: true },
   ],
 
   // Připomínky, když se blíží půlnoc a dnešek ještě není odškrtnutý.
